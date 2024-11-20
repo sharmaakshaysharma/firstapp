@@ -1,0 +1,136 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
+                data-bs-target="#AddCategoryModel" aria-controls="AddCategoryModel">
+                <i class="bx bx-briefcase-alt-2 me-2 align-middle fs-16"></i>Add Category
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="clients_layout d-flex justify-content-between">
+                <div class="clientGrid_box card custom-card flex-grow-1" id="GridContent">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-nowrap table-hover border table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for category in categories %}
+                                    <tr>
+                                        <td>{{ category.name }}</td>
+                                        <td>
+                                            <a href="{% url 'update_category' category.id %}"
+                                                class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#EditCategoryModel" data-category-id="{{ category.id }}"
+                                                data-category-name="{{ category.name }}">Edit</a>
+                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">No categories found</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>Showing 11 Entries <i class="bi bi-arrow-right ms-2 fw-semibold"></i></div>
+                            <div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination mb-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0);">Prev</a>
+                                        </li>
+                                        <li class="page-item active">
+                                            <a class="page-link" href="javascript:void(0);">1</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="javascript:void(0);">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="AddCategoryModel">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Add Category</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" class="p-3">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Name</label>
+                            <input type="text" name="name" id="categoryName" class="form-control"
+                                value="{{ form.name.value|default:'' }}" placeholder="Enter Category Name " required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+ 
+    <!-- Edit Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="EditCategoryModel">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Edit Category</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" class="p-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="category_id" id="categoryId"> <!-- Hidden field for category ID -->
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Name</label>
+                            <input type="text" name="name" id="categoryName" class="form-control"
+                                value="{{ form.name.value|default:'' }}" placeholder="Enter Category Name " required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% load static %}
+<script src="{% static 'js/category_edit.js' %}"></script>

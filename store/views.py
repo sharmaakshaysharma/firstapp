@@ -26,9 +26,9 @@ def update_category(request, category_id):
     if request.method == 'POST':
         form = CategoryType(request.POST, instance=category)  
         if form.is_valid():
-            form.save()  # This will update the existing category
-            return redirect('category_page')  # Redirect to the category list or another page
+            form.save()  
+            return redirect('category_page')  
     else:
-        form = CategoryType(instance=category)  # Pre-populate form with existing data
+        form = CategoryType(instance=category)  
 
     return render(request, 'store/category.html', {'form': form, 'category': category})

@@ -29,11 +29,20 @@
                                     <tr>
                                         <td>{{ category.name }}</td>
                                         <td>
-                                            <a href="{% url 'update_category' category.id %}"
-                                                class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#EditCategoryModel" data-category-id="{{ category.id }}"
-                                                data-category-name="{{ category.name }}">Edit</a>
-                                            <button class="btn btn-danger btn-sm">Delete</button>
+                                            <button class="btn btn-warning btn-sm edit-btn"
+                                            data-category-id="{{ category.id }}"
+                                            data-category-name="{{ category.name }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#EditCategoryModel">
+                                            Edit
+                                        </button>
+                                        <!-- Delete Button -->
+                                        <button class="btn btn-danger btn-sm delete-btn"
+                                            data-category-id="{{ category.id }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#DeleteCategoryModel">
+                                            Delete
+                                        </button>
                                         </td>
                                     </tr>
                                     {% empty %}
@@ -77,8 +86,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-info">
                     <h5 class="modal-title text-white">Add Category</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" >                        
                     </button>
                 </div>
                 <div class="modal-body">
@@ -101,36 +109,74 @@
 
  
     <!-- Edit Modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="EditCategoryModel">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade" tabindex="-1" id="EditCategoryModel">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-info">
-                    <h5 class="modal-title text-white">Edit Category</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" class="p-3">
-                        {% csrf_token %}
-                        <input type="hidden" name="category_id" id="categoryId"> <!-- Hidden field for category ID -->
-                        <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Name</label>
-                            <input type="text" name="name" id="categoryName" class="form-control"
-                                value="{{ form.name.value|default:'' }}" placeholder="Enter Category Name " required>
+                <form method="POST" id="editCategoryForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="category_id" id="editCategoryId">
+                    <div class="modal-header bg-warning">
+                        <h5 class="modal-title text-white">Edit Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editCategoryName" class="form-label">Name</label>
+                            <input type="text" name="name" id="editCategoryName" class="form-control" required>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Update</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-warning">Update</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="DeleteCategoryModel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" id="deleteCategoryForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="category_id" id="deleteCategoryId">
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title text-white">Delete Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this category?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const id = this.getAttribute("data-category-id");
+                const name = this.getAttribute("data-category-name");
+                document.getElementById("editCategoryId").value = id;
+                document.getElementById("editCategoryName").value = name;
+            });
+        });
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const id = this.getAttribute("data-category-id");
+                document.getElementById("deleteCategoryId").value = id;
+            });
+        });
+    });
+</script>
+
+
 {% endblock %}
 
-{% load static %}
-<script src="{% static 'js/category_edit.js' %}"></script>

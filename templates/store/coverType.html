@@ -1,12 +1,12 @@
-{% extends 'base/base.html' %}
+{%extends 'base/base.html'%}
 
-{% block content %}
+{%block content%}
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
-                data-bs-target="#AddCategoryModel" aria-controls="AddCategoryModel">
-                <i class="bx bx-briefcase-alt-2 me-2 align-middle fs-16"></i>Add Category
+                data-bs-target="#AddCoverTypeModel" aria-controls="AddCoverTypeModel">
+                <i class="bx bx-briefcase-alt-2 me-2 align-middle fs-16"></i>Add CoverType
             </button>
         </div>
     </div>
@@ -24,79 +24,55 @@
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for category in categories %}
+                                <tbody>    
+                                    {% for coverType in covertypes %}
                                     <tr>
-                                        <td>{{ category.name }}</td>
+                                        <td>{{coverType.name}}</td>
                                         <td>
                                             <button class="btn btn-warning btn-sm edit-btn"
-                                            data-category-id="{{ category.id }}"
-                                            data-category-name="{{ category.name }}"
+                                            data-coverType-id="{{ coverType.id }}"
+                                            data-coverType-name="{{ coverType.name }}"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#EditCategoryModel">
+                                            data-bs-target="#EditCoverTypeModel">
                                             Edit
                                         </button>
                                         <!-- Delete Button -->
                                         <button class="btn btn-danger btn-sm delete-btn"
-                                            data-category-id="{{ category.id }}"
+                                            data-coverType-id="{{ coverType.id }}"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#DeleteCategoryModel">
+                                            data-bs-target="#DeleteCoverTypeModel">
                                             Delete
                                         </button>
+
                                         </td>
                                     </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="2" class="text-center">No categories found</td>
-                                    </tr>
-                                    {% endfor %}
+                                    
+                                    {%endfor%}
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-
-                    <!-- <div class="card-footer">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>Showing 11 Entries <i class="bi bi-arrow-right ms-2 fw-semibold"></i></div>
-                            <div>
-                                <nav aria-label="Page navigation">
-                                    <ul class="pagination mb-0">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="javascript:void(0);">Prev</a>
-                                        </li>
-                                        <li class="page-item active">
-                                            <a class="page-link" href="javascript:void(0);">1</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:void(0);">Next</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div> -->
+                    </div>                    
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="AddCategoryModel">
+    <div class="modal fade" tabindex="-1" role="dialog" id="AddCoverTypeModel">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-info">
-                    <h5 class="modal-title text-white">Add Category</h5>
+                    <h5 class="modal-title text-white">Add CoverType</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" >                        
                     </button>
                 </div>
                 <div class="modal-body">
                     <form method="POST" class="p-3">
                         {% csrf_token %}
-                        {%include 'alert/alert.html'%}
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Name</label>
-                            <input type="text" name="name" id="categoryName" class="form-control"
-                                value="{{ form.name.value|default:'' }}" placeholder="Enter Category  " required>
+                            <label for="coverTypeName" class="form-label">Name</label>
+                            <input type="text" name="name" id="coverTypeName" class="form-control"
+                                value="{{ form.name.value|default:'' }}" placeholder="Enter CoverType " required>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -107,23 +83,22 @@
             </div>
         </div>
     </div>
-
- 
+  
     <!-- Edit Modal -->
-    <div class="modal fade" tabindex="-1" id="EditCategoryModel">
+    <div class="modal fade" tabindex="-1" id="EditCoverTypeModel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form method="POST" action="{% url 'update_category' %}"  id="editCategoryForm">
+                <form method="POST" action="{% url 'update_coverType' %}"  id="editCoverTypeForm">
                     {% csrf_token %}
-                    <input type="hidden" name="category_id" id="editCategoryId">
+                    <input type="hidden" name="coverType_id" id="editCoverTypeId">
                     <div class="modal-header bg-warning">
-                        <h5 class="modal-title text-white">Edit Category</h5>
+                        <h5 class="modal-title text-white">Edit CoverType</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="editCategoryName" class="form-label">Name</label>
-                            <input type="text" name="name" id="editCategoryName" class="form-control" required>
+                            <label for="editCoverTypeName" class="form-label">Name</label>
+                            <input type="text" name="name" id="editCoverTypeName" class="form-control" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -135,18 +110,19 @@
         </div>
     </div>
 
-    <div class="modal fade" tabindex="-1" id="DeleteCategoryModel">
+    <!-- Delete Modal -->
+    <div class="modal fade" tabindex="-1" id="DeleteCoverTypeModel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form method="POST" action="{% url 'delete_category' %}" id="deleteCategoryForm">
+                <form method="POST" action="{% url 'delete_coverType' %}"  id="deleteCoverTypeForm">
                     {% csrf_token %}
-                    <input type="hidden" name="category_id" id="deleteCategoryId">
+                    <input type="hidden" name="coverType_id" id="deleteCoverTypeId">
                     <div class="modal-header bg-danger">
-                        <h5 class="modal-title text-white">Delete Category</h5>
+                        <h5 class="modal-title text-white">Delete CoverType</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you want to delete this category?</p>
+                        <p>Are you sure you want to delete this coverType?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -158,26 +134,23 @@
     </div>
 
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".edit-btn").forEach(button => {
             button.addEventListener("click", function () {
-                const id = this.getAttribute("data-category-id");
-                const name = this.getAttribute("data-category-name");
-                document.getElementById("editCategoryId").value = id;
-                document.getElementById("editCategoryName").value = name;
+                const id = this.getAttribute("data-coverType-id");
+                const name = this.getAttribute("data-coverType-name");
+                document.getElementById("editCoverTypeId").value = id;
+                document.getElementById("editCoverTypeName").value = name;
             });
         });
         document.querySelectorAll(".delete-btn").forEach(button => {
             button.addEventListener("click", function () {
-                const id = this.getAttribute("data-category-id");
-                document.getElementById("deleteCategoryId").value = id;
+                const id = this.getAttribute("data-coverType-id");
+                document.getElementById("deleteCoverTypeId").value = id;
             });
         });
     });
 </script>
 
-
-{% endblock %}
-
+{%endblock content%}

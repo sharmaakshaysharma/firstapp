@@ -4,3 +4,4 @@ from .models import *
 
 admin.site.register(Category)
 admin.site.register(CoverType)
+admin.site.register(Product)

@@ -12,3 +12,9 @@ class CoverTypes(forms.ModelForm):
     class Meta:
         model = CoverType
         fields = ['name']
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['title','author','description','isbn','price','category','coverType','image']

@@ -1,0 +1,9 @@
+/* Add this in your styles */
+.blur-background {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+
+.modal-backdrop.show {
+    opacity: 0.6;
+}

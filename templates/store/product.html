@@ -1,0 +1,126 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
+                data-bs-target="#AddproductModel" aria-controls="AddproductModel">
+                <i class="bx bx-briefcase-alt-2 me-2 align-middle fs-16"></i>Add Product
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="clients_layout d-flex justify-content-between">
+                <div class="clientGrid_box card custom-card flex-grow-1" id="GridContent">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-nowrap table-hover border table-bordered">
+                                <thead>                                   
+                                    <tr>
+                                        <th scope="col ">ProductImage</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Author</th>
+                                        <th scope="col">ISBN</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for prod in products %}
+                                    <tr>
+                                        <td class="text-center font-weight-bold">
+                                            <img class="card-img-top" src="{{ prod.image.url }}" alt="Image of {{ prod.title }}" height="100px"
+                                            width="80px" style="object-fit:cover;border-radius:10px;">
+                                        </td>
+                                        <td class="text-center font-weight-bold">{{ prod.title }}</td>
+                                        <td class="text-center font-weight-bold">{{ prod.author }}</td>
+                                        <td class="text-center font-weight-bold">{{ prod.isbn }}</td>
+                                        <td class="text-center font-weight-bold">{{ prod.description|slice:":50" }}{% if prod.description|length > 100 %}...{% endif %}</td>
+                                        <td class="text-center font-weight-bold">{{ prod.price }}</td>
+                                        <td class="text-center font-weight-bold">
+                                           
+                                                <button class="btn btn-warning btn-sm edit-btn"
+                                                data-product-id="{{ prod.id }}"                                                
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#EditproductModel">
+                                                Edit
+                                            </button>
+                                            <!-- Delete Button -->
+                                            <button class="btn btn-danger btn-sm delete-btn"
+                                                data-product-id="{{ prod.id }}"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#DeleteproductModel">
+                                                Delete
+                                            </button>                                           
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="AddproductModel">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Add Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" >                        
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'product_page' %}" class="p-3">
+                        {% csrf_token %}
+                        {%include 'alert/alert.html'%}
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Name</label>
+                            <input type="text" name="name" id="categoryName" class="form-control"
+                                value="{{ form.name.value|default:'' }}" placeholder=" " required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Author</label>
+                            <input type="text" name="author" id="categoryName" class="form-control"
+                                value="{{ form.author.value|default:'' }}" placeholder=" " required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">ISBN</label>
+                            <input type="text" name="isbn" id="categoryName" class="form-control"
+                                value="{{ form.isbn.value|default:'' }}" placeholder=" " required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Description</label>
+                            <textarea name="description" id="categoryName" class="form-control" rows="3"
+                                value="{{ form.description.value|default:'' }}" placeholder=" " required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Price</label>
+                            <input type="number" name="price" id="categoryName" class="form-control"
+                                value="{{ form.price.value|default:'' }}" placeholder=" " required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="categoryName" class="form-label">Image</label>
+                            <input type="file" name="image" id="categoryName" class="form-control"
+                                value="{{ form.image.value|default:'' }}" placeholder=" " required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

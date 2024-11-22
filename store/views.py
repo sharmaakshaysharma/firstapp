@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 
 # Create your views here.
@@ -73,3 +73,27 @@ def delete_coverType(request):
 def get_product(request):
     product=Product.objects.all()
     return render(request,'store/home.html',{'product':product})
+
+
+def product_page(request):
+    if request.method == 'POST':
+        form=ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('product_page')
+    else:
+        form=ProductForm()
+
+    products=Product.objects.all()
+    return render(request,'store/product.html',{'form':form,'products':products})
+
+def view_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product_data = {
+        'title': product.title,
+        'author': product.author,
+        'description': product.description,
+        'price': product.price,
+        'image_url': product.image.url,
+    }
+    return JsonResponse(product_data)

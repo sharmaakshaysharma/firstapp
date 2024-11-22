@@ -1,22 +1,30 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block content %}
 <div class="container mt-5">
     <div class="row gy-4">
         {% for prod in product %}
         <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card shadow-sm h-100">
-                <img class="card-img-top" src="{{ prod.image.url }}" alt="Image of {{ prod.title }}"  height="500px"
-                width="500px">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title font-weight-bold text-primary">{{ prod.title }}</h5>
-                    <p class="card-text"><strong>Author:</strong> {{ prod.author }}</p>
-                    <p class="card-text"><strong>Description:</strong> {{ prod.description }}</p>
+            <div class="card shadow-sm">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img class="card-img-top" src="{{ prod.image.url }}" alt="Image of {{ prod.title }}"
+                        style="width: 100%; height: auto; max-width: 300px;">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-truncate text-primary">{{ prod.title }}</h5>
+                    <p class="card-text text-truncate"><strong>Author:</strong> {{ prod.author }}</p>
+                    <p class="card-text text-muted small text-truncate">
+                        <strong>Description:</strong> {{ prod.description|slice:":100" }}
+                        {% if prod.description|length > 100 %}...{% endif %}
+                    </p>
                     <p class="card-text"><strong>Price:</strong> ${{ prod.price }}</p>
-                    <div class="card-footer mt-auto">
-                        <a href="#" class="btn btn-primary">View Details</a>
-                        <a href="#" class="btn btn-primary ">Add to Cart</a>
+                    <div>
+                        <button class="btn btn-danger btn-sm w-100 mb-2 delete-btn" data-product-id="{{ prod.id }}"
+                            data-bs-toggle="modal" data-bs-target="#ViewProductModel" data-prod-title="{{ prod.title }}" data-prod-author="{{ prod.author }}" data-prod-description="{{ prod.description }}" data-prod-price="{{ prod.price }}" data-prod-image="{{ prod.image.url }}">
+                            View Details
+                        </button>
+                        <a href="#" class="btn btn-primary btn-sm w-100">Add to Cart</a>
                     </div>
-                    
                 </div>
             </div>
         </div>

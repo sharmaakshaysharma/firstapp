@@ -77,23 +77,36 @@ def get_product(request):
 
 def product_page(request):
     if request.method == 'POST':
-        form=ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES) 
         if form.is_valid():
             form.save()
             return redirect('product_page')
+        else:
+            print("Form errors:", form.errors)  
     else:
-        form=ProductForm()
+        form = ProductForm()
 
-    products=Product.objects.all()
-    return render(request,'store/product.html',{'form':form,'products':products})
+    products = Product.objects.all()
+    return render(request, 'store/product.html', {'form': form, 'products': products})
 
-def view_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    product_data = {
-        'title': product.title,
-        'author': product.author,
-        'description': product.description,
-        'price': product.price,
-        'image_url': product.image.url,
-    }
-    return JsonResponse(product_data)
+
+def update_product(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Product, id=product_id)
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+        return redirect('product_page')
+
+
+# def view_product(request, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+#     product_data = {
+#         'title': product.title,
+#         'author': product.author,
+#         'description': product.description,
+#         'price': product.price,
+#         'image_url': product.image.url,
+#     }
+#     return JsonResponse(product_data)

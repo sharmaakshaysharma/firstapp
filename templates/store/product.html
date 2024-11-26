@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table text-nowrap table-hover border table-bordered">
-                                <thead>                                   
+                                <thead>
                                     <tr>
                                         <th scope="col ">ProductImage</th>
                                         <th scope="col">Title</th>
@@ -33,36 +33,44 @@
                                     {% for prod in products %}
                                     <tr>
                                         <td class="text-center font-weight-bold">
-                                            <img class="card-img-top" src="{{ prod.image.url }}" alt="Image of {{ prod.title }}" height="100px"
-                                            width="80px" style="object-fit:cover;border-radius:10px;">
+                                            <img class="card-img-top" src="{{ prod.image.url }}"
+                                                alt="Image of {{ prod.title }}" height="100px" width="80px"
+                                                style="object-fit:cover;border-radius:10px;">
                                         </td>
                                         <td class="text-center font-weight-bold">{{ prod.title }}</td>
                                         <td class="text-center font-weight-bold">{{ prod.author }}</td>
                                         <td class="text-center font-weight-bold">{{ prod.isbn }}</td>
-                                        <td class="text-center font-weight-bold">{{ prod.description|slice:":50" }}{% if prod.description|length > 100 %}...{% endif %}</td>
+                                        <td class="text-center font-weight-bold">{{ prod.description|slice:":50" }}
+                                            {% if prod.description|length > 100 %}...{% endif %}</td>
                                         <td class="text-center font-weight-bold">{{ prod.price }}</td>
                                         <td class="text-center font-weight-bold">
-                                           
-                                                <button class="btn btn-warning btn-sm edit-btn"
-                                                data-product-id="{{ prod.id }}"                                                
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#EditproductModel">
+
+                                            <button class="btn btn-warning btn-sm edit-btn"
+                                                data-product-id="{{ prod.id }}" data-product-title="{{ prod.title }}"
+                                                data-product-author="{{ prod.author }}"
+                                                data-product-isbn="{{ prod.isbn }}"
+                                                data-product-description="{{ prod.description }}"
+                                                data-product-price="{{ prod.price }}"
+                                                data-product-image="{{ prod.image.url }}"
+                                                data-product-category="{{prod.category}}"
+                                                data-product-coverType="{{prod.coverType}}" data-bs-toggle="modal"
+                                                data-bs-target="#EditProductModal">
                                                 Edit
                                             </button>
+
                                             <!-- Delete Button -->
                                             <button class="btn btn-danger btn-sm delete-btn"
-                                                data-product-id="{{ prod.id }}"
-                                                data-bs-toggle="modal"
+                                                data-product-id="{{ prod.id }}" data-bs-toggle="modal"
                                                 data-bs-target="#DeleteproductModel">
                                                 Delete
-                                            </button>                                           
+                                            </button>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,43 +82,62 @@
             <div class="modal-content">
                 <div class="modal-header bg-info">
                     <h5 class="modal-title text-white">Add Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" >                        
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{% url 'product_page' %}" class="p-3">
+                    <form method="POST" action="{% url 'product_page' %}" enctype="multipart/form-data" class="p-3">
                         {% csrf_token %}
                         {%include 'alert/alert.html'%}
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Name</label>
-                            <input type="text" name="name" id="categoryName" class="form-control"
+                            <label for="productTitle    " class="form-label">Title</label>
+                            <input type="text" name="title" id="productTitle" class="form-control"
                                 value="{{ form.name.value|default:'' }}" placeholder=" " required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Author</label>
-                            <input type="text" name="author" id="categoryName" class="form-control"
+                            <label for="productAuthor" class="form-label">Author</label>
+                            <input type="text" name="author" id="productAuthor" class="form-control"
                                 value="{{ form.author.value|default:'' }}" placeholder=" " required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">ISBN</label>
-                            <input type="text" name="isbn" id="categoryName" class="form-control"
+                            <label for="productISBN" class="form-label">ISBN</label>
+                            <input type="text" name="isbn" id="productISBN" class="form-control"
                                 value="{{ form.isbn.value|default:'' }}" placeholder=" " required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Description</label>
-                            <textarea name="description" id="categoryName" class="form-control" rows="3"
+                            <label for="productDescription" class="form-label">Description</label>
+                            <textarea name="description" id="productDescription" class="form-control" rows="3"
                                 value="{{ form.description.value|default:'' }}" placeholder=" " required></textarea>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Price</label>
-                            <input type="number" name="price" id="categoryName" class="form-control"
+                            <label for="productPrice" class="form-label">Price</label>
+                            <input type="number" name="price" id="productPrice" class="form-control"
                                 value="{{ form.price.value|default:'' }}" placeholder=" " required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="categoryName" class="form-label">Image</label>
-                            <input type="file" name="image" id="categoryName" class="form-control"
+                            <label for="productImage" class="form-label">Image</label>
+                            <input type="file" name="image" id="productImage" class="form-control"
                                 value="{{ form.image.value|default:'' }}" placeholder=" " required>
                         </div>
+                        <div class="form-group mb-3">
+                            <label for="productCategory" class="form-label">Category</label>
+                            <select name="category" id="productCategory" class="form-control">
+                                <option value="">Choose Category</option>
+                                {% for cat in form.fields.category.queryset %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="productCoverType" class="form-label">CoverType</label>
+                            <select name="coverType" id="productCoverType" class="form-control">
+                                <option value="">Choose Cover Type</option>
+                                {% for cover in form.fields.coverType.queryset %}
+                                <option value="{{ cover.id }}">{{ cover.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Save</button>
@@ -122,5 +149,76 @@
     </div>
 
 
+    <!-- Edit Product -->
+    <div class="modal fade" id="EditProductModal" tabindex="-1" aria-labelledby="EditProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditProductModalLabel">Edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm" method="POST" action="{%url 'update_product'%}" >
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" id="productId">
+                        <div class="mb-3">
+                            <label for="productTitle" class="form-label">Product Title</label>
+                            <input type="text" class="form-control" id="productTitle" name="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productAuthor" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="productAuthor" name="author">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productISBN" class="form-label">ISBN</label>
+                            <input type="text" class="form-control" id="productISBN" name="isbn">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="productDescription" name="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="productPrice" name="price" step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productImage" class="form-label">Image URL</label>
+                            <input type="text" class="form-control" id="productImage" name="image">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = button.getAttribute('data-product-id');
+                const productTitle = button.getAttribute('data-product-title');
+                const productAuthor = button.getAttribute('data-product-author');
+                const productISBN = button.getAttribute('data-product-isbn');
+                const productDescription = button.getAttribute('data-product-description');
+                const productPrice = button.getAttribute('data-product-price');
+                const productImage = button.getAttribute('data-product-image');
+                
+                // Fill the form fields with data
+                document.getElementById("productId").value = productId; // Fix: use productId, not id
+                document.getElementById('productTitle').value = productTitle;
+                document.getElementById('productAuthor').value = productAuthor;
+                document.getElementById('productISBN').value = productISBN;
+                document.getElementById('productDescription').value = productDescription;
+                document.getElementById('productPrice').value = productPrice;
+                document.getElementById('productImage').value = productImage;
+            })
+        })
+    })
+</script>
+
+
+
 {% endblock %}

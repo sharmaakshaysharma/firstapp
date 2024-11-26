@@ -1,5 +1,7 @@
 from django.urls import path,include
 from store.views import *
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('',get_product,name='home'),
@@ -9,7 +11,6 @@ urlpatterns = [
     path('coverType/',coverType_page,name='coverType_page'),
     path('coverType/update/', update_coverType, name='update_coverType'),
     path('coverType/delete/', delete_coverType, name='delete_coverType'),
-    path('product/',product_page,name='product_page'),
-    path('product/<int:id>',view_product,name='view_product'),
-    
-]       
+    path('product/',product_page,name='product_page'),  
+    path('product/update',update_product,name='update_product')
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

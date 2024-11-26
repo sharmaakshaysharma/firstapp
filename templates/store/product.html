@@ -159,32 +159,50 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editProductForm" method="POST" action="{%url 'update_product'%}" >
+                    <form id="editProductForm" method="POST" action="{% url 'update_product' %}">
                         {% csrf_token %}
-                        <input type="hidden" name="product_id" id="productId">
+                        <input type="hidden" name="product_id" id="editProductId">
                         <div class="mb-3">
-                            <label for="productTitle" class="form-label">Product Title</label>
-                            <input type="text" class="form-control" id="productTitle" name="title">
+                            <label for="editProductTitle" class="form-label">Product Title</label>
+                            <input type="text" class="form-control" id="editProductTitle" name="title">
                         </div>
                         <div class="mb-3">
-                            <label for="productAuthor" class="form-label">Author</label>
-                            <input type="text" class="form-control" id="productAuthor" name="author">
+                            <label for="editProductAuthor" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="editProductAuthor" name="author">
                         </div>
                         <div class="mb-3">
-                            <label for="productISBN" class="form-label">ISBN</label>
-                            <input type="text" class="form-control" id="productISBN" name="isbn">
+                            <label for="editProductISBN" class="form-label">ISBN</label>
+                            <input type="text" class="form-control" id="editProductISBN" name="isbn">
                         </div>
                         <div class="mb-3">
-                            <label for="productDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="productDescription" name="description"></textarea>
+                            <label for="editProductDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editProductDescription" name="description"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="productPrice" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="productPrice" name="price" step="0.01">
+                            <label for="editProductPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="editProductPrice" name="price" step="0.01">
                         </div>
                         <div class="mb-3">
-                            <label for="productImage" class="form-label">Image URL</label>
-                            <input type="text" class="form-control" id="productImage" name="image">
+                            <label for="editProductImage" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="editProductImage" name="image">
+                            <img id="productImagePreview" src="" alt="Product Image" class="img-thumbnail mt-2" style="max-width: 150px;">
+                        </div>                        
+                        <div class="mb-3">
+                            <label for="productCategory" class="form-label">Category</label>
+                            <select name="category" id="productCategory" class="form-control">                        
+                                {% for cat in form.fields.category.queryset %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCoverType" class="form-label">CoverType</label>
+                            <select name="coverType" id="productCoverType" class="form-control">
+                               
+                                {% for cover in form.fields.coverType.queryset %}
+                                <option value="{{ cover.id }}">{{ cover.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -192,33 +210,73 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" tabindex="-1" id="DeleteproductModel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" action="{% url 'delete_product' %}" id="deleteproductForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" id="deleteproductId">
+                    <div class="modal-header bg-danger">
+                        <h5 class="modal-title text-white">Delete Product</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this product?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".edit-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const productId = button.getAttribute('data-product-id');
-                const productTitle = button.getAttribute('data-product-title');
-                const productAuthor = button.getAttribute('data-product-author');
-                const productISBN = button.getAttribute('data-product-isbn');
-                const productDescription = button.getAttribute('data-product-description');
-                const productPrice = button.getAttribute('data-product-price');
-                const productImage = button.getAttribute('data-product-image');
-                
-                // Fill the form fields with data
-                document.getElementById("productId").value = productId; // Fix: use productId, not id
-                document.getElementById('productTitle').value = productTitle;
-                document.getElementById('productAuthor').value = productAuthor;
-                document.getElementById('productISBN').value = productISBN;
-                document.getElementById('productDescription').value = productDescription;
-                document.getElementById('productPrice').value = productPrice;
-                document.getElementById('productImage').value = productImage;
-            })
-        })
-    })
+ document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".edit-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const productId = button.getAttribute('data-product-id');
+            const productTitle = button.getAttribute('data-product-title');
+            const productAuthor = button.getAttribute('data-product-author');
+            const productISBN = button.getAttribute('data-product-isbn');
+            const productDescription = button.getAttribute('data-product-description');
+            const productPrice = button.getAttribute('data-product-price');
+            const productImage = button.getAttribute('data-product-image');
+            const category = button.getAttribute('data-product-category');
+            const coverType = button.getAttribute('data-product-coverType');
+
+            // Populate the form fields
+            document.getElementById("editProductId").value = productId;
+            document.getElementById("editProductTitle").value = productTitle;
+            document.getElementById("editProductAuthor").value = productAuthor;
+            document.getElementById("editProductISBN").value = productISBN;
+            document.getElementById("editProductDescription").value = productDescription;
+            document.getElementById("editProductPrice").value = productPrice;
+
+            // Set dropdown values
+            document.getElementById("productCategory").value = category;
+            document.getElementById("productCoverType").value = coverType;
+
+            // Set image preview
+            const productImagePreview = document.getElementById("productImagePreview");
+            productImagePreview.src = productImage;
+            productImagePreview.style.display = productImage ? "block" : "none";
+        });
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const productId = button.getAttribute('data-product-id');
+            document.getElementById("deleteproductId").value = productId;
+        });
+    });
+});
 </script>
-
-
-
 {% endblock %}
+
+
+

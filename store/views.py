@@ -98,6 +98,13 @@ def update_product(request):
         if form.is_valid():
             form.save()
         return redirect('product_page')
+    
+def delete_product(request):
+    if request.method=='POST':
+        product_id=request.POST.get('product_id')
+        product=get_object_or_404(Product,id=product_id)
+        product.delete()
+    return redirect('product_page')
 
 
 # def view_product(request, product_id):

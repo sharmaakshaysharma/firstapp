@@ -24,30 +24,43 @@
             <li class="nav-item active">
               <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'category_page' %}">Category</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'coverType_page' %}">CoverType</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="{% url 'product_page' %}">Product</a>
-            </li>
+            <ul class="navbar-nav ms-auto">
+              {% if user.is_authenticated and user.is_staff or user.is_superuser %}
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'category_page' %}">Category</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'coverType_page' %}">CoverType</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'product_page' %}">Product</a>
+              </li>
+              {% endif %}
+            </ul>
           </ul>
         </div>
 
         <!-- LogIn button on the right -->
         <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link text-white" href="{% url 'login' %}">LogIn</a>
+            <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link text-white">Hello, {{ user.username }}!</span>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'login_page' %}">LogIn</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
           </li>
+          {% endif %}
         </ul>
       </div>
     </nav>
-    <!-- Content -->
+    {% include 'alert/alert.html' %}
     <div class="container mt-4">
       {% block content %} {% endblock %}
     </div>

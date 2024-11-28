@@ -1,47 +1,171 @@
-{%extends 'base/base.html'%}
+{% extends 'base/base.html' %}
 
-{%block content%}
-<section class="section-conten padding-y" style="min-height:84vh">
-
-
-    <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+{% block content %}
+<section class="section-conten padding-y" style="min-height: 84vh">
+    <div class="card mx-auto" style="max-width: 380px; margin-top: 100px;">
         <div class="card-body">
             <h4 class="card-title mb-4">Register</h4>
-            <form method="POST">
+            <form class="login-form" method="POST">
                 {% csrf_token %}
-            
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group position-relative">
+                            <label>First Name <span class="text-danger">*</span></label>
+                            {{ form.first_name }}
+                            {% for error in form.first_name.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
 
-                <div class="form-group">
-                    <input name="first_name" class="form-control" placeholder="FirstName " type="text" required>
-                </div>
-                <br/>
-                <div class="form-group">
-                    <input name="last_name" class="form-control" placeholder="LastName" type="text" required>
-                </div>
-                <br/>
-                <div class="form-group">
-                    <input name="email" class="form-control" placeholder="Email" type="text" required>
-                </div>
-                <br/>
-                <!-- <div class="form-group">
-                    <input name="phone_number" class="form-control" placeholder="Enter phone number here !" type="text" required>
-                </div> -->
-                <div class="form-group">
-                    <input name="password" class="form-control" placeholder="Password" type="password" required>
-                </div>
-                <br/>
+                    <div class="col-md-6">
+                        <div class="form-group position-relative">
+                            <label>Last Name <span class="text-danger">*</span></label>
+                            {{ form.last_name }}
+                            {% for error in form.last_name.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Register </button>
+                    <div class="col-md-12">
+                        <div class="form-group position-relative">
+                            <label>Email <span class="text-danger">*</span></label>
+                            {{ form.email }}
+                            {% for error in form.email.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+
+                    <div class="col-md-12">
+                        <div class="form-group position-relative">
+                            <label>Username <span class="text-danger">*</span></label>
+                            {{ form.username }}
+                            {% for error in form.username.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+
+                    <div class="col-md-12">
+                        <div class="form-group position-relative">
+                            <label>Password <span class="text-danger">*</span></label>
+                            {{ form.password1 }}
+                            {% for error in form.password1.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+
+
+                    <div class="col-md-12">
+                        <div class="form-group position-relative">
+                            <label>Confirm Password <span class="text-danger">*</span></label>
+                            {{ form.password2 }}
+                            {% for error in form.password2.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="custom-control">
+                                {{ form.check }}
+                                <label>
+                                    I Accept
+                                    <a href="#" class="text-primary" data-bs-toggle="modal"
+                                        data-bs-target="#TermsAndConditionsModal"
+                                        aria-controls="TermsAndConditionsModal">
+                                        Terms and Conditions
+                                    </a>
+                                </label>
+                            </div>
+                            {% for error in form.check.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+
+                    <div class="col-md-12">
+                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                    </div>
+                    <br />
+                    <br />
+
+                    <div class="mx-auto">
+                        <p class="mb-0 mt-3">
+                            <small class="text-dark mr-2">Already have an account?</small>
+                            <a href="{% url 'login_page' %}" class="text-primary font-weight-bold">Sign in</a>
+                        </p>
+                    </div>
+                    <br />
+                    <br />
+
                 </div>
             </form>
         </div>
     </div>
 
-    <p class="text-center mt-4">Already have account ?  <a href="{% url 'login' %}">Sign in</a></p>
+    <div class="modal fade" tabindex="-1" role="dialog" id="TermsAndConditionsModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        By registering, you agree to the following terms and conditions:
+                    </p>
+                    <ul>
+                        <li><strong>Account Responsibility:</strong> You are responsible for all activities under your
+                            account.</li>
+                        <li><strong>Use of Services:</strong> Only for personal, non-commercial use.</li>
+                        <li><strong>Privacy Policy:</strong> Your data will be handled as per our privacy policy.</li>
+                        <li><strong>Payments and Purchases:</strong> All transactions must be accurate and valid.</li>
+                        <li><strong>Content Ownership:</strong> No reproduction of content without permission.</li>
+                        <li><strong>Order Cancellation:</strong> Orders can be canceled within 24 hours of placement.
+                        </li>
+                        <li><strong>Governing Law:</strong> Disputes will be resolved under applicable laws of [Your
+                            Country/State].</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <br><br>
-
-
-
 </section>
-{%endblock%}
+{% endblock %}

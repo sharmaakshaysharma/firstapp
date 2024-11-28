@@ -20,7 +20,7 @@ Installation ⚙️
 Clone the Repository
 bash
 Copy code
-git clone https://github.com/yourusername/ecomm-bookstore.git
+git clone (https://github.com/sharmaakshaysharma/firstapp.git)
 cd ecomm-bookstore
 Install Dependencies
 It's recommended to use a virtual environment:

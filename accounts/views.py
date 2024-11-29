@@ -4,6 +4,7 @@ from .forms import RegisterForm
 from .forms import LoginForm 
 from django.contrib.auth.forms import AuthenticationForm  
 from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 
 # View for Login Page
 def login_page(request):
@@ -46,3 +47,7 @@ def register_page(request):
             context = {'form': form}
             return render(request, 'accounts/register.html', context)
     return render(request, 'accounts/register.html', {})
+
+def custom_logout_view(request):
+    logout(request)
+    return redirect('login_page')

@@ -19,8 +19,11 @@
                     </p>
                     <p class="card-text"><strong>Price:</strong> ${{ prod.price }}</p>
                     <div>
-                        <button class="btn btn-danger btn-sm w-100 mb-2 delete-btn" data-product-id="{{ prod.id }}"
-                            data-bs-toggle="modal" data-bs-target="#ViewProductModel" data-prod-title="{{ prod.title }}" data-prod-author="{{ prod.author }}" data-prod-description="{{ prod.description }}" data-prod-price="{{ prod.price }}" data-prod-image="{{ prod.image.url }}">
+                        <button class="btn btn-danger btn-sm w-100 mb-2 view-btn" data-product-id="{{ prod.id }}"
+                            data-prod-title="{{ prod.title }}" data-prod-author="{{ prod.author }}"
+                            data-prod-description="{{ prod.description }}" data-prod-price="{{ prod.price }}"
+                            data-prod-image="{{ prod.image.url }}" data-bs-toggle="modal"
+                            data-bs-target="#ViewProductModal">
                             View Details
                         </button>
                         <a href="#" class="btn btn-primary btn-sm w-100">Add to Cart</a>
@@ -28,7 +31,61 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" tabindex="-1" id="ViewProductModal" role="dialog" aria-labelledby="ViewProductModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title" id="ViewProductModalLabel">Product Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img id="product-image" src="" alt="Product Image" class="img-fluid rounded">
+                            </div>
+                            <div class="col-md-8">
+                                <h4 id="product-title" class="mb-2"></h4>
+                                <p><strong>Author:</strong> <span id="product-author"></span></p>
+                                <p><strong>Description:</strong></p>
+                                <p id="product-description"></p>
+                                <p><strong>Price:</strong> <span id="product-price"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% endfor %}
-    </div>
+    </div>    
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const viewButtons = document.querySelectorAll(".view-btn");
+    const modal = document.getElementById("ViewProductModal");
+
+    viewButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            // Fetch data attributes from the button
+            const title = button.getAttribute("data-prod-title");
+            const author = button.getAttribute("data-prod-author");
+            const description = button.getAttribute("data-prod-description");
+            const price = button.getAttribute("data-prod-price");
+            const image = button.getAttribute("data-prod-image");
+
+            // Populate the modal content
+            modal.querySelector("#product-title").textContent = title;
+            modal.querySelector("#product-author").textContent = author;
+            modal.querySelector("#product-description").textContent = description;
+            modal.querySelector("#product-price").textContent = `$${price}`;
+            modal.querySelector("#product-image").src = image;
+        });
+    });
+});
+
+</script>
 {% endblock content %}

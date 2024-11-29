@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path
 from store.views import *
 from django.conf.urls.static import static
 from django.conf import settings

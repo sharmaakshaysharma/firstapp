@@ -16,9 +16,8 @@
 
 <body>
   <div class="container mt-5">
-    <nav class="navbar navbar-expand-lg navbar-light bg-info">
+    <nav class="navbar navbar-expand-lg navbar-light bg-black">
       <div class="container-fluid">
-        <!-- Collapsible content -->
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item active">
@@ -39,8 +38,8 @@
             </ul>
           </ul>
         </div>
-
-        <!-- LogIn button on the right -->
+    
+        <!-- User Profile and Cart -->
         <ul class="navbar-nav ms-auto">
           {% if user.is_authenticated %}
           <li class="nav-item">
@@ -49,6 +48,14 @@
           <li class="nav-item">
             <span class="nav-link text-white">Hello, {{ user.username }}!</span>
           </li>
+    
+          <!-- Cart Section -->
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'show_cart' %}">
+               <i class="fas fa-shopping-cart"></i>
+               <span class="badge bg-danger" id="cart-count">{{ cart_item_count|default:0 }}</span>
+            </a>
+         </li>         
           {% else %}
           <li class="nav-item">
             <a class="nav-link text-white" href="{% url 'login_page' %}">LogIn</a>
@@ -60,6 +67,7 @@
         </ul>
       </div>
     </nav>
+    
     {% include 'alert/alert.html' %}
     <div class="container mt-4">
       {% block content %} {% endblock %}

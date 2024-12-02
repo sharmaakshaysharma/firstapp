@@ -6,9 +6,8 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f9f9f9;
+        background-color: #f4f7f3;
     }
-
     h1 {
         text-align: center;
         margin-bottom: 20px;
@@ -16,29 +15,28 @@
         font-size: 24px;
         color: #333;
     }
-
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        table-layout: fixed; 
     }
-
-    th,
-    td {
-        text-align: left;
-        padding: 15px;
-        border-bottom: 1px solid #ddd;
+    th, td {
+        padding: 10px; 
+        text-align: center;
+        vertical-align: middle;
     }
-
     th {
         background-color: #f4f4f4;
+        font-weight: bold;
     }
-
+    td img {
+        display: block;
+        margin: 0 auto; 
+    }
     .price,
     .total {
         text-align: right;
     }
-
     .quantity input {
         width: 40px;
         text-align: center;
@@ -46,16 +44,13 @@
         border-radius: 5px;
         padding: 5px;
     }
-
     .summary {
         text-align: right;
         margin-top: 20px;
     }
-
     .summary p {
         margin: 10px 0;
     }
-
     .checkout-button {
         display: block;
         width: 200px;
@@ -68,11 +63,9 @@
         font-weight: bold;
         border-radius: 5px;
     }
-
     .checkout-button:hover {
         background-color: #333;
     }
-
     .free-shipping {
         text-align: center;
         margin-top: 10px;
@@ -87,66 +80,111 @@
         <table>
             <thead>
                 <tr>
-                    <th class="scope">Item</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
+                    <th style="width: 5%;"> </th>
+                    <th style="width: 15%;">Item</th>
+                    <th style="width: 25%;">Name</th>
+                    <th style="width: 15%;">Price</th>
+                    <th style="width: 20%;">Quantity</th>
+                    <th style="width: 15%;">Total</th>
+                    <th style="width: 5%;"> </th>
                 </tr>
             </thead>
             <tbody>
-                {%for cart in cart_items%}
+                {% for cart in cart_items %}
                 <tr>
-                    <td class="text-center font-height-bold" style="padding: 10px;">
-                        <img class="card-img-top" src="{{ cart.product.image.url }}"
-                            alt="Image of {{ cart.product.title }}"
-                            style="max-height: 70px; max-width: 70px; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <td>
+                        <input type="checkbox" class="cart-checkbox" data-id="{{ cart.id }}" checked style="accent-color: black; background-color: black;">
                     </td>
                     <td>
-                        $<span class="product-price" data-price="{{ cart.product.price }}">{{ cart.product.price}}</span>
+                        <img class="card-img-top" src="{{ cart.product.image.url }}" alt="Image of {{ cart.product.title }}">
+                    </td>
+                    <td>{{ cart.product.title }}</td>
+                    <td>
+                        $<span class="product-price" data-price="{{ cart.product.price }}">{{ cart.product.price }}</span>
                     </td>
                     <td>
                         <button class="minus" data-id="{{ cart.id }}" style="border-radius: 5px;">-</button>
-                        <input  class="quantity" value="{{ cart.quantity }}" min="1"
-                            style="width: 50px; text-align: center; font-size: small; border-radius: 5px;" data-id="{{ cart.id }}" disabled>
+                        <input class="quantity" value="{{ cart.quantity }}" min="1"
+                            style="width: 50px; text-align: center; font-size: small; border-radius: 5px;"
+                            data-id="{{ cart.id }}" disabled>
                         <button class="plus" data-id="{{ cart.id }}" style="border-radius: 5px;">+</button>
-                    </td>                    
+                    </td>
                     <td>
                         $<span class="total-price" data-total="{{ cart.total_price }}">{{ cart.total_price }}</span>
                     </td>
+                    <td>
+                        <a class='text-black'><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
                 </tr>
-                {%endfor%}
+                {% endfor %}
             </tbody>
         </table>
+        
         <div class="summary">
-
-            <p><strong>Grand Total: ${{ grand_total }}</strong></p>
+            <p style="text-align: right;"><strong>Total: <span class="total-price"
+                        data-total="{{ grand_total }}">{{ grand_total }}</span></strong></p>    
         </div>
-        <a class="checkout-button">Check Out</a>
+        <a class="checkout-button" >Place Order</a>
     </div>
 </body>
 
 <script>
     document.querySelectorAll('.plus, .minus').forEach(button => {
-    button.addEventListener('click', function () {        
-        const input = this.closest('td').querySelector('.quantity');
-        let value = parseInt(input.value, 10);
+        button.addEventListener('click', function () {
+            const input = this.closest('td').querySelector('.quantity');
+            let value = parseInt(input.value, 10);
 
-        if (this.classList.contains('plus')) {
-            value++;
-        } else if (this.classList.contains('minus') && value > 1) {
-            value--;
-        }
-        input.value = value;
-        const cartId = input.getAttribute('data-id');
-        updateCart(cartId, value);
+            if (this.classList.contains('plus')) {
+                value++;
+            } else if (this.classList.contains('minus') && value > 1) {
+                value--;
+            }
+
+            input.value = value;
+            const cartId = input.getAttribute('data-id');
+            updateCart(cartId, value);
+        });
     });
-});
 
-function updateCart(cartId, quantity) {    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
-    console.log(`Cart ${cartId} updated to quantity: ${quantity}`);
-}
-
-
+    function updateCart(cartId, quantity) {
+        fetch('/cart/update-cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                cart_id: cartId,
+                quantity: quantity
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                } else {
+                    const row = document.querySelector(`.quantity[data-id="${cartId}"]`).closest('tr');
+                    row.querySelector('.total-price').innerText = `${data.total_price.toFixed(1)}`;
+                    const grandTotalElement = document.querySelector('.summary p strong');
+                    grandTotalElement.innerText = `Grand Total: ${data.grand_total.toFixed(1)}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 </script>
 {%endblock%}

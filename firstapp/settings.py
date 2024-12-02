@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'store',
     'django_bootstrap5',
     'accounts',
-    'cart'
+    'cart',
+
 ]
 
 MIDDLEWARE = [
@@ -73,6 +74,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'firstapp.wsgi.application'
 
+STRIPE_SECRET_KEY = 'sk_test_51QRTQiAUYKd3xYlSdRD3UELNdeJh4VkJA6YzxFUlexuSzNHtzAKj0xFCapts2ULFCmQLfDI57Ni2wbzN7D1iZwSJ00tXfpWTM1'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51QRTQiAUYKd3xYlSS6Vj7G3IX2tKSRr3FUS5XYw6FYxWnVYocVMau4rl1F8d2MCJT7ehchtCDmERbMcIohdv24hH000mPNkuKC'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Order, OrderItem
+from .models import Order, OrderItem,Address
 from cart.models import Cart  
 import json
 
@@ -42,7 +42,18 @@ def payment(request, order_id):
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
     }
     if request.method == "POST":
-        try:        
+        try:  
+            address = Address.objects.create(
+                user=request.user,
+                order=order,
+                name = request.POST.get('name'),    
+                line1=request.POST.get('address_line1'),
+                line2=request.POST.get('address_line2'),
+                city=request.POST.get('city'),
+                state=request.POST.get('state'),
+                zip_code=request.POST.get('zip'),
+                country=request.POST.get('country')
+            )      
             charge = stripe.Charge.create(
                 amount=int(order.total * 100),  
                 currency='usd',
@@ -51,6 +62,7 @@ def payment(request, order_id):
             )
             order.is_paid = True
             order.save()
+
             return redirect('orders:confirmation', order_id=order.id)
         except stripe.error.StripeError as e:
             return render(request, 'orders/payment.html', {'order': order, 'error': str(e)})

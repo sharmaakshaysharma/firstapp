@@ -19,3 +19,18 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.title} x {self.quantity}"
+    
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="address")
+    name =models.CharField(max_length=255,null=True,blank=True)
+    line1 = models.CharField(max_length=255)
+    line2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.line1}, {self.city}, {self.country}"

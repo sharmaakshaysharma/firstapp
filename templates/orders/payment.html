@@ -3,27 +3,83 @@
 
 {% block content %}
 <script src="https://js.stripe.com/v3/"></script>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Order Details Section -->
+        <div class="col-md-6">
+            <h1>Order Details & Payment</h1>
+            <p><strong>Order ID:</strong> {{ order.id }}</p>
+            <p><strong>Total:</strong> ${{ order.total }}</p>
 
-<h1>Order Payment</h1>
-<p>Total: ${{ order.total }}</p>
+            <h3>Items:</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.title }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>${{ item.quantity|multiply:item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-
-<form method="POST" id="payment-form">
-    {% csrf_token %}
-    
-
-    <script
-        src="https://checkout.stripe.com/checkout.js"
-        class="stripe-button"
-        data-key="{{ stripe_public_key }}"  
-        data-amount="{{ order.total|floatformat:2|multiply:100 }}" 
-        data-name="Book Shopping"
-        data-description="Order Payment"
-        data-currency="usd"
-        data-email="{{ request.user.email }}" 
-        data-label="Pay with Card"
-        data-locale="auto">
-    </script>
-</form>
-
+        <!-- Payment Form Section -->
+        <div class="col-md-6">
+            <form method="POST" id="payment-form">
+                {% csrf_token %}
+                <h1>Delevery Address</h1>
+                <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address-line1" class="form-label">Address Line 1:</label>
+                    <input type="text" class="form-control" name="address_line1" id="address-line1" required>
+                </div>
+                <div class="form-group">
+                    <label for="address-line2" class="form-label">Address Line 2:</label>
+                    <input type="text" class="form-control" name="address_line2" id="address-line2">
+                </div>                
+                <div class="form-group">
+                    <label for="city" class="form-label">City:</label>
+                    <input type="text" class="form-control" name="city" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state" class="form-label">State:</label>
+                    <input type="text" class="form-control" name="state" id="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="zip" class="form-label">ZIP Code:</label>
+                    <input type="text" class="form-control" name="zip" id="zip" required>
+                </div>
+                <div class="form-group">
+                    <label for="country" class="form-label">Country:</label>
+                    <input type="text" class="form-control" name="country" id="country" required>
+                </div>
+                <br/>
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="{{ stripe_public_key }}" 
+                    data-amount="{{ order.total|floatformat:2|multiply:100 }}"
+                    data-name="Book Shopping" 
+                    data-description="Order Payment" 
+                    data-currency="usd"
+                    data-email="{{ request.user.email }}" 
+                    data-label="Pay with Card" 
+                    data-locale="auto">
+                </script>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

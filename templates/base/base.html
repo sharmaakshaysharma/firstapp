@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,6 +21,7 @@
             <li class="nav-item active">
               <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
             </li>
+
             <ul class="navbar-nav ms-auto">
               {% if user.is_authenticated and user.is_staff or user.is_superuser %}
               <li class="nav-item">
@@ -31,14 +33,15 @@
               <li class="nav-item">
                 <a class="nav-link text-white" href="{% url 'product_page' %}">Product</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link text-white" href="">Order</a>
-              </li>
+              
               {% endif %}
             </ul>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'orders:show_order' %}">Order</a>
+            </li>
           </ul>
         </div>
-    
+
         <!-- User Profile and Cart -->
         <ul class="navbar-nav ms-auto">
           {% if user.is_authenticated %}
@@ -52,10 +55,10 @@
           <!-- Cart Section -->
           <li class="nav-item">
             <a class="nav-link text-white" href="{% url 'show_cart' %}">
-               <i class="fas fa-shopping-cart"></i>
-               <span class="badge bg-danger" id="cart-count">{{ cart_item_count|default:0 }}</span>
+              <i class="fas fa-shopping-cart"></i>
+              <span class="badge bg-danger" id="cart-count">{{ cart_item_count|default:0 }}</span>
             </a>
-         </li>         
+          </li>
           {% else %}
           <li class="nav-item">
             <a class="nav-link text-white" href="{% url 'login_page' %}">LogIn</a>
@@ -74,4 +77,5 @@
     </div>
   </div>
 </body>
+
 </html>

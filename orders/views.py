@@ -73,3 +73,12 @@ def payment(request, order_id):
 def order_confirmation(request, order_id):
     order = Order.objects.get(id=order_id, user=request.user)
     return render(request, 'orders/confirmation.html', {'order': order})
+
+
+@login_required
+def show_order(request):
+    if request.user.is_superuser:
+        order = Order.objects.all()
+    else:
+        order = Order.objects.filter(user=request.user)
+    return render(request, 'orders/order.html', {'order': order})

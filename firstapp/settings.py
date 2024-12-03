@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'accounts',
     'cart',
+    'orders'
 
 ]
 
@@ -74,8 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'firstapp.wsgi.application'
 
-STRIPE_SECRET_KEY = 'sk_test_51QRTQiAUYKd3xYlSdRD3UELNdeJh4VkJA6YzxFUlexuSzNHtzAKj0xFCapts2ULFCmQLfDI57Ni2wbzN7D1iZwSJ00tXfpWTM1'
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51QRTQiAUYKd3xYlSS6Vj7G3IX2tKSRr3FUS5XYw6FYxWnVYocVMau4rl1F8d2MCJT7ehchtCDmERbMcIohdv24hH000mPNkuKC'
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
         'OPTIONS': {
-            'timeout': 20,  # Increase the timeout to 20 seconds
+            'timeout': 25,  # Increase the timeout to 20 seconds
         },
     }
 }
@@ -135,3 +135,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+STRIPE_SECRET_KEY = 'sk_test_51QRp2hDuK2HxevWa5XfeNFszBVItWt9JotKXHPQXnqj4bYlzeIdOyNcRvgkAdtuKpgdCce9JHmu7ZtWuUJMDGUmt00BXfnm6cM'
+STRIPE_PUBLIC_KEY = 'pk_test_51QRp2hDuK2HxevWaAMZEY3bWbpG7tJ8X02fIxLheWPOq9J3MCjV0S7MjvtgyenDu9XTRbkH9NqSSVooQU7yXnQRa004MtpLWE1'

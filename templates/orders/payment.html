@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<script src="https://js.stripe.com/v3/"></script>
+
+<h1>Order Payment</h1>
+<p>Total: ${{ order.total }}</p>
+
+
+<form method="POST" id="payment-form">
+    {% csrf_token %}
+    
+
+    <script
+        src="https://checkout.stripe.com/checkout.js"
+        class="stripe-button"
+        data-key="{{ stripe_public_key }}"  
+        data-amount="{{ order.total|floatformat:2|multiply:100 }}" 
+        data-name="Book Shopping"
+        data-description="Order Payment"
+        data-currency="usd"
+        data-email="{{ request.user.email }}" 
+        data-label="Pay with Card"
+        data-locale="auto">
+    </script>
+</form>
+
+{% endblock %}

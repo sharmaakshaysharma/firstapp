@@ -124,7 +124,7 @@
             <p style="text-align: right;"><strong>Total: <span class="total-price"
                         data-total="{{ grand_total }}">{{ grand_total }}</span></strong></p>    
         </div>
-        <a class="checkout-button" >Place Order</a>
+        <a class="checkout-button" id="place-order-button">Place Order</a>
     </div>
 </body>
 
@@ -186,5 +186,39 @@
             })
             .catch(error => console.error('Error:', error));
     }
+    document.getElementById('place-order-button').addEventListener('click', function () {
+        const selectedItems = [];
+        document.querySelectorAll('.cart-checkbox:checked').forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const cartId = checkbox.getAttribute('data-id');
+            const quantity = row.querySelector('.quantity').value;
+            selectedItems.push({ cart_id: cartId, quantity: parseInt(quantity, 10) });
+        });
+        if (selectedItems.length === 0) {
+            alert('Please select at least one item to place the order.');
+            return;
+        }
+        fetch('/order/place/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ items: selectedItems })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order placed successfully!');
+                    window.location.href = '/order/payment/' + data.order_id;
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while placing the order.');
+            });
+    });
 </script>
 {%endblock%}

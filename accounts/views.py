@@ -16,17 +16,16 @@ def login_page(request):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                # Log the user in
                 login(request, user)
                 messages.success(request, f'Welcome back, {username}!')
-                return redirect('home')  # Redirect to the homepage after login
+                return redirect('home')  
             else:
                 messages.error(request, 'Invalid credentials, please try again.')
         else:
             print(form.errors) 
             messages.error(request, 'Invalid form submission.')
     else:
-        form = LoginForm()  # Create an empty form
+        form = LoginForm() 
 
     return render(request, 'accounts/login.html', {'form': form})
 

@@ -160,7 +160,7 @@
                 {% for item in order.items.all %}
                 <tr>
                     <td>{{ item.product.title }}</td>
-                    <td>${{ item.product.author }}</td>
+                    <td>{{ item.product.author }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>${{ item.price }}</td>
                 </tr>

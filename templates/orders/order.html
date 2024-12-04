@@ -1,4 +1,176 @@
-{%extends 'base/base.html'%}
-{%block content%}
+{% extends 'base/base.html' %}
+{% block content %}
+<h1>Order Details & Payment</h1>
 
-{% endblock%}
+{% for order in orders %}
+<style>
+    @keyframes blink {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .blink-button {
+        animation: blink 1s infinite;
+    }
+
+    .timeline {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .timeline::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        height: 2px;
+        width: 100%;
+        background-color: #28690a;
+        z-index: -1;
+    }
+
+    .timeline-step {
+        position: relative;
+        text-align: center;
+        flex: 1;
+    }
+
+    .timeline-step::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #ddd;
+        transform: translateX(-50%);
+    }
+
+    .timeline-step.active::before {
+        background-color: #007bff;
+    }
+
+    .timeline-step.completed::before {
+        background-color: #28a745;
+        animation: blink 1s infinite;
+    }
+
+    .timeline-step span {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .timeline-step p {
+        font-size: 0.85em;
+    }
+</style>
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Order #{{ order.id }} - {{ order.created_at|date:"F j, Y, g:i a" }}</h2>
+        <p>
+            Payment:
+            {% if order.is_paid %}
+            <span class="badge bg-success">Paid</span>
+            {% else %}
+            <span class="badge bg-warning text-dark">Pending</span>
+            {% if not request.user.is_staff %}
+            <a href="{% url 'orders:payment' order.id %}" class="btn btn-dark btn-sm ms-2 blink-button text-white"
+                style="position: absolute; top: 10px; right: 10px;">Pay Now</a>
+            {% endif %}
+            {% endif %}
+        </p>
+
+        {% if order.is_paid %}       
+        <div class="timeline">
+            <div class="timeline-step {% if order.status == 'processed' or order.status == 'shipped' or order.status == 'out_for_delivery' or order.status == 'delivered' %} completed {% endif %}">
+                <br/>
+                <span>Processed</span>
+                <p>
+                    {% if order.processed_at %}
+                    {{ order.processed_at|date:"F j, Y, g:i a" }}
+                    {% else %}
+                    Not yet processed
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="timeline-step {% if order.status == 'shipped' or order.status == 'out_for_delivery' or order.status == 'delivered' %} completed {% endif %}">
+                <br/>
+                <span>Shipped</span>
+                <p>
+                    {% if order.shipped_at %}
+                    {{ order.shipped_at|date:"F j, Y, g:i a" }}
+                    {% else %}
+                    Not yet shipped
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="timeline-step {% if order.status == 'out_for_delivery' or order.status == 'delivered' %} completed {% endif %}">
+                <br/>
+                <span>Out for Delivery</span>
+                <p>
+                    {% if order.out_for_delivery_at %}
+                    {{ order.out_for_delivery_at|date:"F j, Y, g:i a" }}
+                    {% else %}
+                    Not yet out for delivery
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="timeline-step {% if order.status == 'delivered' %} completed {% endif %}">
+                <br/>
+                <span>Delivered</span>
+                <p>
+                    {% if order.delivered_at %}
+                    {{ order.delivered_at|date:"F j, Y, g:i a" }}
+                    {% else %}
+                    Not yet delivered
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <table class="table text-nowrap table-hover border table-bordered rounded">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product.title }}</td>
+                    <td>${{ item.product.author }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4 class="text-end">Order Total: ${{ order.total }}</h4>
+    </div>
+</div>
+{% empty %}
+<p>No orders found.</p>
+{% endfor %}
+{% endblock %}

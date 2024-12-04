@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .forms import *
-from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 from cart.models import Cart
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
 
+@login_required
 def category_page(request):
     if request.method == 'POST':
         form = CategoryType(request.POST)
@@ -23,6 +23,7 @@ def category_page(request):
     categories = Category.objects.all()     
     return render(request, 'store/category.html', {'form': form, 'categories': categories,'cart_item_count': cart_item_count})
 
+@login_required
 def update_category(request):
     if request.method == 'POST':
         category_id = request.POST.get('category_id')
@@ -32,12 +33,14 @@ def update_category(request):
             form.save()
     return redirect('category_page')
 
+@login_required
 def delete_category(request):
     if request.method == 'POST':
         category_id = request.POST.get('category_id')
         category = get_object_or_404(Category, id=category_id)
         category.delete()
     return redirect('category_page')
+@login_required
 def coverType_page(request):
     if request.method == 'POST':
         form=CoverTypes(request.POST)
@@ -53,6 +56,7 @@ def coverType_page(request):
     covertypes=CoverType.objects.all()
     return render(request,'store/coverType.html',{'form':form,'covertypes':covertypes,'cart_item_count': cart_item_count})
 
+@login_required
 def update_coverType(request):
     if request.method == 'POST':
         coverType_id = request.POST.get('coverType_id')
@@ -62,6 +66,7 @@ def update_coverType(request):
             form.save()
     return redirect('coverType_page')
 
+@login_required
 def delete_coverType(request):
     if request.method == 'POST':
         coverType_id = request.POST.get('coverType_id')
@@ -77,6 +82,7 @@ def get_product(request):
     products = Product.objects.all()
     return render(request, 'store/home.html', {'cart_item_count': cart_item_count, 'product': products})
 
+@login_required
 def product_page(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES) 
@@ -94,6 +100,7 @@ def product_page(request):
     products = Product.objects.all()
     return render(request, 'store/product.html', {'form': form, 'products': products,'cart_item_count': cart_item_count})
 
+@login_required
 def update_product(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -103,6 +110,7 @@ def update_product(request):
             form.save()
         return redirect('product_page')
     
+@login_required   
 def delete_product(request):
     if request.method=='POST':
         product_id=request.POST.get('product_id')

@@ -7,6 +7,7 @@ from .models import Order, OrderItem,Address
 from cart.models import Cart  
 import json
 
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
@@ -78,7 +79,9 @@ def order_confirmation(request, order_id):
 @login_required
 def show_order(request):
     if request.user.is_superuser:
-        order = Order.objects.all()
+        orders = Order.objects.prefetch_related('items', 'address').order_by('-created_at')
     else:
-        order = Order.objects.filter(user=request.user)
-    return render(request, 'orders/order.html', {'order': order})
+        orders = Order.objects.filter(user=request.user).prefetch_related('items', 'address').order_by('-created_at')
+
+    return render(request, 'orders/order.html', {'orders': orders})
+

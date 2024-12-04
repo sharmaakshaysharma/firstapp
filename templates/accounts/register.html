@@ -10,6 +10,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group position-relative">
+                            <label>Username <span class="text-danger">*</span></label>
+                            {{ form.username }}
+                            {% for error in form.username.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-md-6">
+                        <div class="form-group position-relative">
                             <label>First Name <span class="text-danger">*</span></label>
                             {{ form.first_name }}
                             {% for error in form.first_name.errors %}
@@ -36,7 +49,7 @@
                     <br />
                     <br />
 
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group position-relative">
                             <label>Email <span class="text-danger">*</span></label>
                             {{ form.email }}
@@ -50,21 +63,9 @@
                     <br />
                     <br />
 
-                    <div class="col-md-12">
-                        <div class="form-group position-relative">
-                            <label>Username <span class="text-danger">*</span></label>
-                            {{ form.username }}
-                            {% for error in form.username.errors %}
-                            <div class="alert alert-danger">
-                                <strong>{{ error|escape }}</strong>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <br />
-                    <br />
+                    
 
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group position-relative">
                             <label>Password <span class="text-danger">*</span></label>
                             {{ form.password1 }}
@@ -79,7 +80,7 @@
                     <br />
 
 
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group position-relative">
                             <label>Confirm Password <span class="text-danger">*</span></label>
                             {{ form.password2 }}
@@ -139,7 +140,7 @@
     <div class="modal fade" tabindex="-1" role="dialog" id="TermsAndConditionsModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-info">
+                <div class="modal-header bg-black">
                     <h5 class="modal-title text-white">Terms and Conditions</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

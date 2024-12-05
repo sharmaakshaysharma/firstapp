@@ -30,7 +30,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="{% url 'orders:show_order' %}">Order</a>
-            </li> 
+            </li>
             <ul class="navbar-nav ms-auto">
               {% if user.is_authenticated and user.is_staff or user.is_superuser %}
               <li class="nav-item">
@@ -41,10 +41,10 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="{% url 'product_page' %}">AddProduct</a>
-              </li>              
+              </li>
               {% endif %}
             </ul>
-                     
+
           </ul>
         </div>
         <ul class="navbar-nav ms-auto">
@@ -58,7 +58,7 @@
           <li class="nav-item">
             <a class="nav-link text-white" href="{% url 'show_cart' %}">
               <i class="fas fa-shopping-cart"></i>
-              <span class="badge bg-danger" id="cart-count">{{ cart_item_count|default:0 }}</span>
+              <span class="badge bg-danger" id="cart-count">{{ cart_item_count|default:'' }}</span>
             </a>
           </li>
           {% else %}
@@ -78,6 +78,32 @@
       {% block content %} {% endblock %}
     </div>
   </div>
+  <div id="welcomeModal" class="modal fade" tabindex="-1" aria-labelledby="welcomeModalLabel" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title" id="welcomeModalLabel">Welcome to Our Store!</h5>
+          <button type="button" class="btn-close text-white bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Explore our amazing products and find what you need!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.location.pathname === '/' && !sessionStorage.getItem("welcomeModalShown")) {
+        var welcomeModal = new bootstrap.Modal(document.getElementById("welcomeModal"));
+        welcomeModal.show();   
+        sessionStorage.setItem("welcomeModalShown", "true");     
+      }
+    });
+  </script>
 </body>
 
 </html>

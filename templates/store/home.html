@@ -1,69 +1,69 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
-    <div class="row gy-4">
-        {% for prod in product %}
-        <div class="col-sm-12 col-md-6 col-lg-3">
-            <div class="card" style="min-height: 400px;" box-shadow: none;>
-                <div class=" justify-content-center align-items-center">
-                    <img class="card-img-top" src="{{ prod.image.url }}" alt="Image of {{ prod.title }}"
-                        style=" height: 400px; ">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title  text-black">{{ prod.title }}</h5>
-                    <div class="row">
-                        <div class="col-6">
-                            <button class="btn btn-danger btn-sm w-100 mb-2 view-btn" data-product-id="{{ prod.id }}"
-                                data-prod-title="{{ prod.title }}" data-prod-author="{{ prod.author }}"
-                                data-prod-description="{{ prod.description }}" data-prod-price="{{ prod.price }}"
-                                data-prod-image="{{ prod.image.url }}" data-bs-toggle="modal"
-                                data-bs-target="#ViewProductModal">
-                                View Details
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button id="cart-button-{{ prod.id }}" class="btn btn-primary btn-sm w-100 mb-2 view-btn"
-                                onclick="addToCart('{{ prod.id }}')">
-                                Add to Cart
-                            </button>
-                        </div>
+<div class="row gy-4">
+    {% for prod in product %}
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="card" style="min-height: 400px;" box-shadow: none;>
+            <div class=" justify-content-center align-items-center">
+                <img class="card-img-top" src="{{ prod.image.url }}" alt="Image of {{ prod.title }}"
+                    style=" height: 400px; ">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title  text-black">{{ prod.title }}</h5>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-danger btn-sm w-100 mb-2 view-btn" data-product-id="{{ prod.id }}"
+                            data-prod-title="{{ prod.title }}" data-prod-author="{{ prod.author }}"
+                            data-prod-description="{{ prod.description }}" data-prod-price="{{ prod.price }}"
+                            data-prod-image="{{ prod.image.url }}" data-bs-toggle="modal"
+                            data-bs-target="#ViewProductModal">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button id="cart-button-{{ prod.id }}" class="btn btn-primary btn-sm w-100 mb-2 view-btn"
+                            onclick="addToCart('{{ prod.id }}')">
+                            Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" tabindex="-1" id="ViewProductModal" role="dialog"
-            aria-labelledby="ViewProductModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-black text-white">
-                        <h5 class="modal-title" id="ViewProductModalLabel">Product Details</h5>
-                        <button type="button" class="btn-close text-white bg-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img id="product-image" src="" alt="Product Image" class="img-fluid rounded">
-                            </div>
-                            <div class="col-md-8">
-                                <h4 id="product-title" class="mb-2"></h4>
-                                <p><strong>Author:</strong> <span id="product-author"></span></p>
-                                <p><strong>Description:</strong></p>
-                                <p id="product-description"></p>
-                                <p><strong>Price:</strong> <span id="product-price"></span></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% endfor %}
     </div>
+
+    <div class="modal fade" tabindex="-1" id="ViewProductModal" role="dialog" aria-labelledby="ViewProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-black text-white">
+                    <h5 class="modal-title" id="ViewProductModalLabel">Product Details</h5>
+                    <button type="button" class="btn-close text-white bg-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="product-image" src="" alt="Product Image" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-8">
+                            <h4 id="product-title" class="mb-2"></h4>
+                            <p><strong>Author:</strong> <span id="product-author"></span></p>
+                            <p><strong>Description:</strong></p>
+                            <p id="product-description"></p>
+                            <p><strong>Price:</strong> <span id="product-price"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -77,15 +77,27 @@
                 const description = button.getAttribute("data-prod-description");
                 const price = button.getAttribute("data-prod-price");
                 const image = button.getAttribute("data-prod-image");
+                const productId = button.getAttribute("data-product-id");
 
                 modal.querySelector("#product-title").textContent = title;
                 modal.querySelector("#product-author").textContent = author;
                 modal.querySelector("#product-description").textContent = description;
                 modal.querySelector("#product-price").textContent = `$${price}`;
                 modal.querySelector("#product-image").src = image;
+                fetch(`/productview/${productId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Product view updated: ", data.view_count);
+                    });
             });
         });
     });
+
 
     function addToCart(productId) {
         fetch(`/cart/addtocart/${productId}/`, {

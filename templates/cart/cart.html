@@ -78,82 +78,97 @@
     .checkout-button:hover {
         background-color: #333;
     }
-
-    .free-shipping {
-        text-align: center;
-        margin-top: 10px;
-        color: green;
-        font-weight: bold;
-    }
+    
 </style>
 
 <body>
     <div class="container">
-        {% if cart_items %}
-        <h1>Your Cart ({{ cart_items|length }} items)</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 5%;"> </th>
-                    <th style="width: 15%;">Item</th>
-                    <th style="width: 25%;">Name</th>
-                    <th style="width: 15%;">Price</th>
-                    <th style="width: 20%;">Quantity</th>
-                    <th style="width: 15%;">Total</th>
-                    <th style="width: 5%;"> </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cart in cart_items %}
-                <tr>
-                    <td>
-                        <input type="checkbox" class="cart-checkbox" data-id="{{ cart.id }}" checked
-                            style="accent-color: black; background-color: black;">
-                    </td>
-                    <td>
-                        <img class="card-img-top" src="{{ cart.product.image.url }}"
-                            alt="Image of {{ cart.product.title }}">
-                    </td>
-                    <td>{{ cart.product.title }}</td>
-                    <td>
-                        $<span class="product-price" data-price="{{ cart.product.price }}">
-                            {{ cart.product.price}}</span>
-                    </td>
-                    <td>
-                        <button class="minus" data-id="{{ cart.id }}" style="border-radius: 5px;">-</button>
-                        <input class="quantity" value="{{ cart.quantity }}" min="1"
-                            style="width: 50px; text-align: center; font-size: small; border-radius: 5px;"
-                            data-id="{{ cart.id }}" disabled>
-                        <button class="plus" data-id="{{ cart.id }}" style="border-radius: 5px;">+</button>
-                    </td>
-                    <td>
-                        $<span class="total-price" data-total="{{ cart.total_price }}">{{ cart.total_price }}</span>
-                    </td>
-                    <td>
-                        <a class="text-black delete-cart-item" data-id="{{ cart.id }}" style="cursor: pointer;">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
+        <div class="row">
+            {% if cart_items %}
+            <h1>Your Cart ({{ cart_items|length }} items)</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;"> </th>
+                        <th style="width: 15%;">Item</th>
+                        <th style="width: 25%;">Name</th>
+                        <th style="width: 15%;">Price</th>
+                        <th style="width: 20%;">Quantity</th>
+                        <th style="width: 15%;">Total</th>
+                        <th style="width: 5%;"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cart in cart_items %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="cart-checkbox" data-id="{{ cart.id }}" checked
+                                style="accent-color: black; background-color: black;">
+                        </td>
+                        <td>
+                            <img class="card-img-top" src="{{ cart.product.image.url }}"
+                                alt="Image of {{ cart.product.title }}">
+                        </td>
+                        <td>{{ cart.product.title }}</td>
+                        <td>
+                            $<span class="product-price" data-price="{{ cart.product.price }}">
+                                {{ cart.product.price}}</span>
+                        </td>
+                        <td>
+                            <button class="minus" data-id="{{ cart.id }}" style="border-radius: 5px;">-</button>
+                            <input class="quantity" value="{{ cart.quantity }}" min="1"
+                                style="width: 50px; text-align: center; font-size: small; border-radius: 5px;"
+                                data-id="{{ cart.id }}" disabled>
+                            <button class="plus" data-id="{{ cart.id }}" style="border-radius: 5px;">+</button>
+                        </td>
+                        <td>
+                            $<span class="total-price" data-total="{{ cart.total_price }}">{{ cart.total_price }}</span>
+                        </td>
+                        <td>
+                            <a class="text-black delete-cart-item" data-id="{{ cart.id }}" style="cursor: pointer;">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    
+            <div class="summary">
+                <p style="text-align: right;"><strong>Total: <span class="total-price" data-total="{{ grand_total }}">
+                            {{grand_total }}</span></strong></p>
+            </div>
+            <a class="checkout-button" id="place-order-button">Place Order</a>
+            {% else %}
+            <h1>Your Cart is Empty</h1>
+            <p style="text-align: center; margin-top: 20px;">Looks like you haven't added anything to your cart yet.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/" class="checkout-button">Start Shopping</a>
+            </div>
+            {% endif %}
+        </div>
+        <!-- <div style="position: absolute; left: 10px; bottom: 10px;">
+            <h2 style="margin-top: 20px;" class="bold">Most Viewed Products :-</h2>
+            <ul class="most-viewed-books"
+                style="list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 20px;">
+                {% if most_viewed %}
+                {% for product_view in most_viewed %}
+                <li class="product-item" min-width: 100px; max-width: 25%; margin-bottom: 20px;">
+                    <div class="card" style="min-height: 100px; box-shadow: none;">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <img class="card-img-top" src="{{ product_view.product.image.url }}"
+                                alt="Image of {{ product_view.product.title }}" style="height: 400px;">
+                        </div>
+                    </div>
+                </li>
                 {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="summary">
-            <p style="text-align: right;"><strong>Total: <span class="total-price" data-total="{{ grand_total }}">
-                        {{grand_total }}</span></strong></p>
-        </div>
-        <a class="checkout-button" id="place-order-button">Place Order</a>
-        {% else %}
-        <h1>Your Cart is Empty</h1>
-        <p style="text-align: center; margin-top: 20px;">Looks like you haven't added anything to your cart yet.</p>
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="/" class="checkout-button">Start Shopping</a>
-        </div>
-        {% endif %}
+                {% else %}
+                <p>No products found.</p>
+                {% endif %}
+            </ul>
+        </div> -->
     </div>
 </body>
-
 <script>
     document.querySelectorAll('.plus, .minus').forEach(button => {
         button.addEventListener('click', function () {

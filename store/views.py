@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .forms import *
 from django.contrib import messages
 from cart.models import Cart
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
 
@@ -117,3 +118,13 @@ def delete_product(request):
         product=get_object_or_404(Product,id=product_id)
         product.delete()
     return redirect('product_page')
+
+
+def product_view(request, product_id):
+    product =Product.objects.get(id=product_id)
+    product_view, created = ProductView.objects.get_or_create(product=product)
+
+    product_view.view_count += 1
+    product_view.save()
+    
+    return JsonResponse({"message": "Product view count updated", "view_count": product_view.view_count})

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from store.models import Product
+from store.models import Product,ProductView
 from cart.models import Cart
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -25,12 +25,15 @@ def cart_page(request, product_id):
 
 def show_cart(request):
     cart_items = Cart.objects.filter(user=request.user)
+    most_viewed=ProductView.objects.order_by('-view_count')[:3]
+    print(f"Most viewed products: {most_viewed}")
     for item in cart_items:
         item.total_price = item.quantity * item.product.price
     if request.user.is_authenticated:
         cart_item_count = Cart.objects.filter(user=request.user).count()
     grand_total = sum(item.total_price for item in cart_items)
-    return render(request, 'cart/cart.html', {'cart_items': cart_items,'cart_item_count': cart_item_count,'grand_total':grand_total})
+   
+    return render(request, 'cart/cart.html', {'cart_items': cart_items,'cart_item_count': cart_item_count,'grand_total':grand_total,'most_viewed': most_viewed})
 
 
 def update_cart(request):
@@ -67,4 +70,5 @@ def delete_cart_item(request, cart_id):
         return JsonResponse({'success': True, 'message': 'Cart item deleted successfully.'})
     
     return render(request, 'cart/cart.html')
+
 

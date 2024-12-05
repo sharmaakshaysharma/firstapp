@@ -13,5 +13,6 @@ urlpatterns = [
     path('coverType/delete/', delete_coverType, name='delete_coverType'),
     path('product/',product_page,name='product_page'),  
     path('product/update',update_product,name='update_product'),
-    path('product/delete',delete_product,name='delete_product')
+    path('product/delete',delete_product,name='delete_product'),
+    path('productview/<int:product_id>/', product_view, name='product_view'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

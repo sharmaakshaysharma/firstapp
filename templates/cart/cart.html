@@ -8,6 +8,7 @@
         padding: 0;
         background-color: #f4f7f3;
     }
+
     h1 {
         text-align: center;
         margin-bottom: 20px;
@@ -15,28 +16,35 @@
         font-size: 24px;
         color: #333;
     }
+
     table {
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed; 
+        table-layout: fixed;
     }
-    th, td {
-        padding: 10px; 
+
+    th,
+    td {
+        padding: 10px;
         text-align: center;
         vertical-align: middle;
     }
+
     th {
         background-color: #f4f4f4;
         font-weight: bold;
     }
+
     td img {
         display: block;
-        margin: 0 auto; 
+        margin: 0 auto;
     }
+
     .price,
     .total {
         text-align: right;
     }
+
     .quantity input {
         width: 40px;
         text-align: center;
@@ -44,13 +52,16 @@
         border-radius: 5px;
         padding: 5px;
     }
+
     .summary {
         text-align: right;
         margin-top: 20px;
     }
+
     .summary p {
         margin: 10px 0;
     }
+
     .checkout-button {
         display: block;
         width: 200px;
@@ -63,9 +74,11 @@
         font-weight: bold;
         border-radius: 5px;
     }
+
     .checkout-button:hover {
         background-color: #333;
     }
+
     .free-shipping {
         text-align: center;
         margin-top: 10px;
@@ -76,6 +89,7 @@
 
 <body>
     <div class="container">
+        {% if cart_items %}
         <h1>Your Cart ({{ cart_items|length }} items)</h1>
         <table>
             <thead>
@@ -93,14 +107,17 @@
                 {% for cart in cart_items %}
                 <tr>
                     <td>
-                        <input type="checkbox" class="cart-checkbox" data-id="{{ cart.id }}" checked style="accent-color: black; background-color: black;">
+                        <input type="checkbox" class="cart-checkbox" data-id="{{ cart.id }}" checked
+                            style="accent-color: black; background-color: black;">
                     </td>
                     <td>
-                        <img class="card-img-top" src="{{ cart.product.image.url }}" alt="Image of {{ cart.product.title }}">
+                        <img class="card-img-top" src="{{ cart.product.image.url }}"
+                            alt="Image of {{ cart.product.title }}">
                     </td>
                     <td>{{ cart.product.title }}</td>
                     <td>
-                        $<span class="product-price" data-price="{{ cart.product.price }}">{{ cart.product.price }}</span>
+                        $<span class="product-price" data-price="{{ cart.product.price }}">
+                            {{ cart.product.price}}</span>
                     </td>
                     <td>
                         <button class="minus" data-id="{{ cart.id }}" style="border-radius: 5px;">-</button>
@@ -113,18 +130,27 @@
                         $<span class="total-price" data-total="{{ cart.total_price }}">{{ cart.total_price }}</span>
                     </td>
                     <td>
-                        <a class='text-black'><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a class="text-black delete-cart-item" data-id="{{ cart.id }}" style="cursor: pointer;">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        
+
         <div class="summary">
-            <p style="text-align: right;"><strong>Total: <span class="total-price"
-                        data-total="{{ grand_total }}">{{ grand_total }}</span></strong></p>    
+            <p style="text-align: right;"><strong>Total: <span class="total-price" data-total="{{ grand_total }}">
+                        {{grand_total }}</span></strong></p>
         </div>
         <a class="checkout-button" id="place-order-button">Place Order</a>
+        {% else %}
+        <h1>Your Cart is Empty</h1>
+        <p style="text-align: center; margin-top: 20px;">Looks like you haven't added anything to your cart yet.</p>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" class="checkout-button">Start Shopping</a>
+        </div>
+        {% endif %}
     </div>
 </body>
 
@@ -220,5 +246,46 @@
                 alert('An error occurred while placing the order.');
             });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.delete-cart-item').forEach(button => {
+            button.addEventListener('click', function () {
+                const cartId = this.getAttribute('data-id');
+
+                fetch(`/cart/delete-cart-item/${cartId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('tr').remove();
+                            window.location.reload();
+                        } else {
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
 </script>
 {%endblock%}

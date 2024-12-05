@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'accounts',
     'cart',
-    'orders'
+    'orders',
+    'googlebook'
 
 ]
 
@@ -139,3 +140,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STRIPE_SECRET_KEY = 'sk_test_51QRp2hDuK2HxevWa5XfeNFszBVItWt9JotKXHPQXnqj4bYlzeIdOyNcRvgkAdtuKpgdCce9JHmu7ZtWuUJMDGUmt00BXfnm6cM'
 STRIPE_PUBLIC_KEY = 'pk_test_51QRp2hDuK2HxevWaAMZEY3bWbpG7tJ8X02fIxLheWPOq9J3MCjV0S7MjvtgyenDu9XTRbkH9NqSSVooQU7yXnQRa004MtpLWE1'
+
+
+GOOGLE_BOOKS_API_KEY = 'AIzaSyB7Cj3gWle1m6QUdX8Y7q8_UG_i0-DlUM4'

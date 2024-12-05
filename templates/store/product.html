@@ -249,7 +249,7 @@
             const category = button.getAttribute('data-product-category');
             const coverType = button.getAttribute('data-product-coverType');
 
-            // Populate the form fields
+            
             document.getElementById("editProductId").value = productId;
             document.getElementById("editProductTitle").value = productTitle;
             document.getElementById("editProductAuthor").value = productAuthor;
@@ -257,11 +257,11 @@
             document.getElementById("editProductDescription").value = productDescription;
             document.getElementById("editProductPrice").value = productPrice;
 
-            // Set dropdown values
+            
             document.getElementById("productCategory").value = category;
             document.getElementById("productCoverType").value = coverType;
 
-            // Set image preview
+            
             const productImagePreview = document.getElementById("productImagePreview");
             productImagePreview.src = productImage;
             productImagePreview.style.display = productImage ? "block" : "none";

@@ -1,0 +1,118 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book Search</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-6">
+            <h4>Google Books Search</h4>
+        </div>
+        <div class="col-6 text-end">
+            <form method="get" action="" id="search-form">
+                <input type="text" name="q" placeholder="Search for books" value="{{ query }}" id="search-input">
+                <button type="submit" style="display:none;">Search</button>
+            </form>
+        </div>
+    </div>
+    <br />
+
+    {% if books %}
+    <div class="container ">
+        <div class="row gy-4">
+            {% for book in books %}
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <div class="card" style="min-height: 400px; box-shadow: none;">
+                    <div class="justify-content-center align-items-center">
+                        {% if book.volumeInfo.imageLinks and book.volumeInfo.imageLinks.thumbnail %}
+                        <img class="card-img-top" src="{{ book.volumeInfo.imageLinks.thumbnail }}"
+                            alt="Image of {{ book.volumeInfo.title }}" style="height: 400px;">
+                        {% else %}
+                        <img class="card-img-top" src="https://via.placeholder.com/150?text=No+Image"
+                            alt="No Image Available" style="height: 400px;">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-black">{{ book.volumeInfo.title | slice:":20" }}</h5>
+                        <div class="row">
+                            <button class="btn btn-dark btn-sm w-100 mb-2 view-btn" data-book-id="{{ book.id }}"
+                                data-book-title="{{ book.volumeInfo.title }}"
+                                data-book-author="{{ book.volumeInfo.authors }}"
+                                data-book-description="{{ book.volumeInfo.description }}"
+                                data-book-image="{{ book.volumeInfo.imageLinks.thumbnail }}" data-bs-toggle="modal"
+                                data-bs-target="#ViewBookModal">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" tabindex="-1" id="ViewBookModal" role="dialog" aria-labelledby="ViewBookModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-black text-white">
+                            <h5 class="modal-title" id="ViewBookModalLabel">Book Details</h5>
+                            <button type="button" class="btn-close text-white bg-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img id="book-image" src="" alt="Book Image" class="img-fluid rounded">
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 id="book-title" class="mb-2"></h4>
+                                    <p><strong>Author:</strong> <span id="book-author"></span></p>
+                                    <p><strong>Description:</strong></p>
+                                    <p id="book-description"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const viewButtons = document.querySelectorAll(".view-btn");
+            const modal = document.getElementById("ViewBookModal");
+
+            viewButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const title = button.getAttribute("data-book-title");
+                    const author = button.getAttribute("data-book-author");
+                    const description = button.getAttribute("data-book-description");
+                    const image = button.getAttribute("data-book-image");
+
+                    modal.querySelector("#book-title").textContent = title;
+                    modal.querySelector("#book-author").textContent = author;
+                    modal.querySelector("#book-description").textContent = description;
+                    modal.querySelector("#book-image").src = image;
+                });
+            });
+        });
+
+        document.getElementById("search-input").addEventListener("input", function () {
+            const form = document.getElementById('search-form');
+            form.submit();
+        });
+
+    </script>
+    {% else %}
+    <p>No results found.</p>
+    {% endif %}
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'base/base.html' %}
+{% block content %}
+{% if books %}
+<style>
+    @keyframes blink {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .blink-star {
+        animation: blink 2s infinite;
+    }
+</style>
+<div class="container mt-4">
+    <div class="row gy-4">
+        {% for item in books %}
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card" style="min-height: 400px;">
+                {% if item.book == books.0.book %}
+                <div class="position-absolute top-0 start-0 m-2">
+                    <div class="bg-warning rounded-circle d-flex justify-content-center align-items-center blink-star"
+                        style="width: 50px; height: 50px;">
+                        <i class="bi bi-star-fill text-white" style="font-size: 1.5rem;"></i>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="justify-content-center align-items-center">
+                    <img class="card-img-top" src="{{ item.book.image.url }}" alt="Image of {{ item.book.title }}"
+                        style="height: 400px; object-fit: cover;">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-black">{{ item.book.title }}</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-danger btn-sm w-100 mb-2 view-btn" data-book-id="{{ item.book.id }}"
+                                data-book-title="{{ item.book.title }}" data-book-author="{{ item.book.author }}"
+                                data-book-description="{{ item.book.description }}"
+                                data-book-price="{{ item.book.price }}" data-book-image="{{ item.book.image.url }}"
+                                data-bs-toggle="modal" data-bs-target="#ViewBookModal">
+                                View Details
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button id="cart-button-{{ item.book.id }}"
+                                class="btn btn-primary btn-sm w-100 mb-2 view-btn"
+                                onclick="addToCart('{{ item.book.id }}')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="modal fade" tabindex="-1" id="ViewBookModal" role="dialog" aria-labelledby="ViewBookModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-black text-white">
+                    <h5 class="modal-title" id="ViewBookModalLabel">Product Details</h5>
+                    <button type="button" class="btn-close text-white bg-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="product-image" src="" alt="Product Image" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-8">
+                            <h4 id="product-title" class="mb-2"></h4>
+                            <p><strong>Author:</strong> <span id="product-author"></span></p>
+                            <p><strong>Description:</strong></p>
+                            <p id="product-description"></p>
+                            <p><strong>Price:</strong> <span id="product-price"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const viewButtons = document.querySelectorAll(".view-btn");
+        const modal = document.getElementById("ViewBookModal");
+
+        viewButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const title = button.getAttribute("data-book-title");
+                const author = button.getAttribute("data-book-author");
+                const description = button.getAttribute("data-book-description");
+                const price = button.getAttribute("data-book-price");
+                const image = button.getAttribute("data-book-image");
+
+                modal.querySelector("#product-title").textContent = title;
+                modal.querySelector("#product-author").textContent = author;
+                modal.querySelector("#product-description").textContent = description;
+                modal.querySelector("#product-price").textContent = `$${price}`;
+                modal.querySelector("#product-image").src = image;
+            });
+        });
+    });
+    function addToCart(productId) {
+        fetch(`/cart/addtocart/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+                document.getElementById(`cart-button-${productId}`).href = data.cart_url;
+            });
+    }
+</script>
+{% else %}
+<p>{{ message }}</p>
+{% endif %}
+{% endblock %}

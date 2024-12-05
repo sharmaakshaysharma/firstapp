@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Order, OrderItem,Address
-from cart.models import Cart  
+from cart.models import Cart   
+from django.db.models import Sum
+from store.models import Product
 import json
 
 
@@ -85,3 +87,23 @@ def show_order(request):
 
     return render(request, 'orders/order.html', {'orders': orders})
 
+
+
+def most_sold_book(request):
+    most_sold_books = OrderItem.objects.values('product') \
+        .annotate(total_quantity_sold=Sum('quantity')) \
+        .order_by('-total_quantity_sold')[:5]
+        
+    if most_sold_books:
+        books = []
+        for item in most_sold_books:
+            book = Product.objects.get(id=item['product'])
+            books.append({
+                'book': book,
+                'total_quantity_sold': item['total_quantity_sold']
+            })
+        context = {'books': books}
+    else:
+        context = {'message': 'No books sold yet.'}
+
+    return render(request, 'orders/most_sold_book.html', context)

@@ -3,8 +3,6 @@ from django.http import JsonResponse
 from store.models import Product
 from cart.models import Cart
 from django.contrib.auth.decorators import login_required
-
-# Create your views here.
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Cart, Product
@@ -60,3 +58,13 @@ def update_cart(request):
         except Cart.DoesNotExist:
             return JsonResponse({'error': 'Cart item not found'}, status=404)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def delete_cart_item(request, cart_id):
+    if request.method == 'POST':
+        cart_item = get_object_or_404(Cart, id=cart_id)
+        cart_item.delete()
+        return JsonResponse({'success': True, 'message': 'Cart item deleted successfully.'})
+    
+    return render(request, 'cart/cart.html')
+

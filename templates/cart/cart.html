@@ -6,43 +6,63 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f4f7f3;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1,
+    h2,
+    h3 {
+        text-align: center;
+        font-weight: bold;
+        color: #444;
     }
 
     h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 24px;
-        color: #333;
+        margin-bottom: 30px;
+        font-size: 28px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     th,
     td {
-        padding: 10px;
+        padding: 15px;
         text-align: center;
         vertical-align: middle;
+        border-bottom: 1px solid #ddd;
     }
 
     th {
         background-color: #f4f4f4;
         font-weight: bold;
+        color: #555;
     }
 
     td img {
         display: block;
         margin: 0 auto;
+        border-radius: 10px;
+        max-height: 100px;
+        object-fit: cover;
     }
 
     .price,
     .total {
-        text-align: right;
+        font-weight: bold;
+        color: #000;
     }
 
     .quantity input {
@@ -51,41 +71,131 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 5px;
+        font-size: 14px;
+    }
+
+    .quantity button {
+        border: 1px solid #ddd;
+        background-color: #f4f4f4;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .quantity button:hover {
+        background-color: #e0e0e0;
     }
 
     .summary {
+        margin-top: 30px;
         text-align: right;
-        margin-top: 20px;
-    }
-
-    .summary p {
-        margin: 10px 0;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
     }
 
     .checkout-button {
         display: block;
-        width: 200px;
+        max-width: 300px;
         margin: 20px auto;
-        padding: 10px;
+        padding: 15px;
         text-align: center;
-        color: #fff;
         background-color: #000;
+        color: #fff;
         text-decoration: none;
         font-weight: bold;
         border-radius: 5px;
+        transition: background-color 0.3s;
     }
 
     .checkout-button:hover {
-        background-color: #333;
+        background-color: #444;
     }
-    
+
+    .most-viewed-products {
+        margin-top: 40px;
+    }
+
+    .most-viewed-products h5 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .most-viewed-products ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .most-viewed-products li {
+        flex: 1 1 calc(25% - 20px);
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .most-viewed-products li img {
+        max-height: 150px;
+        width: auto;
+        margin-bottom: 10px;
+        border-radius: 8px;
+    }
+
+    .most-viewed-products li h6 {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #555;
+    }
+
+    .most-viewed-products li .btn {
+        background-color: #000;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .most-viewed-products li .btn:hover {
+        background-color: #444;
+    }
+
+    @media screen and (max-width: 768px) {
+        .most-viewed-products li {
+            flex: 1 1 calc(50% - 20px);
+        }
+
+        .checkout-button {
+            max-width: 100%;
+        }
+
+        table th,
+        table td {
+            font-size: 12px;
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+    }
 </style>
+
 
 <body>
     <div class="container">
         <div class="row">
             {% if cart_items %}
-            <h1>Your Cart ({{ cart_items|length }} items)</h1>
+            <h3>Your Cart ({{ cart_items|length }} items)</h3>
             <table>
                 <thead>
                     <tr>
@@ -107,7 +217,8 @@
                         </td>
                         <td>
                             <img class="card-img-top" src="{{ cart.product.image.url }}"
-                                alt="Image of {{ cart.product.title }}">
+                                alt="Image of {{ cart.product.title }}" height="100px" width="80px"
+                                style="object-fit:cover;border-radius:10px;">
                         </td>
                         <td>{{ cart.product.title }}</td>
                         <td>
@@ -133,7 +244,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-    
+
             <div class="summary">
                 <p style="text-align: right;"><strong>Total: <span class="total-price" data-total="{{ grand_total }}">
                             {{grand_total }}</span></strong></p>
@@ -146,27 +257,39 @@
                 <a href="/" class="checkout-button">Start Shopping</a>
             </div>
             {% endif %}
+            <div class="row mt-5">
+                <h5 style="font-weight: bold; color: #333;">Most Viewed Products :-</h5>
+                <div class="col-12">
+                    <ul class="most-viewed-books list-unstyled d-flex flex-wrap gap-4 justify-content-start">                       
+                        {% if most_viewed %}
+                        {% for product_view in most_viewed %}
+                        <li class="product-item" style="min-width: 100px; max-width: 25%; margin-bottom: 20px;" >
+                            <div class="card" style="min-height: 100px; box-shadow: none;">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <img class="card-img-top" src="{{ product_view.product.image.url }}"
+                                        alt="Image of {{ product_view.product.title }}"
+                                        style="height: 200px; width: 200px;">
+                                </div>
+                                <div class="card-body" style="margin-top: -17px; text-align: center;">
+                                    <h6 style="font-weight: bold; color: #555; font-size: 14px;">
+                                        {{product_view.product.title }}</h6>
+                                    <a class="btn btn-dark add-to-cart-btn"
+                                        style="margin-top: 10px; padding: 8px 12px; background-color: #333; color: #fff; border-radius: 5px;"
+                                        data-product-id="{{ product_view.product.id }}"  onclick="addToCart('{{ product_view.product.id }}')">
+                                        <i class="fas fa-shopping-cart" style="margin-right: 5px;"></i> Add to Cart
+                                    </a>
+                                </div>
+
+                            </div>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <p>No products found.</p>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
         </div>
-        <!-- <div style="position: absolute; left: 10px; bottom: 10px;">
-            <h2 style="margin-top: 20px;" class="bold">Most Viewed Products :-</h2>
-            <ul class="most-viewed-books"
-                style="list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 20px;">
-                {% if most_viewed %}
-                {% for product_view in most_viewed %}
-                <li class="product-item" min-width: 100px; max-width: 25%; margin-bottom: 20px;">
-                    <div class="card" style="min-height: 100px; box-shadow: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <img class="card-img-top" src="{{ product_view.product.image.url }}"
-                                alt="Image of {{ product_view.product.title }}" style="height: 400px;">
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-                {% else %}
-                <p>No products found.</p>
-                {% endif %}
-            </ul>
-        </div> -->
     </div>
 </body>
 <script>
@@ -287,19 +410,19 @@
         });
     });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
+    function addToCart(productId) {
+        fetch(`/cart/addtocart/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+                document.getElementById(`cart-button-${productId}`).href = data.cart_url;
+            });
     }
 
 </script>

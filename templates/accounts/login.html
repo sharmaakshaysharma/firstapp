@@ -1,4 +1,5 @@
 {%extends 'base/base.html'%}
+{% load socialaccount %}
 
 {%block content%}
 <section class="section-conten padding-y" style="min-height:84vh">
@@ -13,16 +14,50 @@
                     <label for="username">Username</label>
                     {{ form.username }}
                 </div>
-                <br/>
+                <br />
                 <div class="form-group">
                     <label for="password">Password</label>
                     {{ form.password }}
                 </div>
-                <br/>
+                <br />
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
-                <br/>
+                <br />
+                <div class="d-flex">
+                    <div class="app-grid-icon" data-icon="google" data-test="grid-icon">
+                        <a class="app-grid-icon__link" href="{% provider_login_url 'google' %}">
+                            <div class="app-grid-icon__image">
+                                <img src="https://img.icons8.com/?size=50&amp;id=V5cGWnc9R4xj&amp;format=png"
+                                    alt="Google icon" width="50" height="50">
+                            </div>
+                            <div class="app-grid-icon__title">
+                                <span class="app-grid-icon__title-wrap">
+                                    <span class="app-grid-icon__text"></span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="app-grid-icon" data-icon="118467" data-test="grid-icon" data-v-23549497=""
+                        data-v-e9b83e6c="">
+                        <a class="app-grid-icon__link" href="{% provider_login_url 'facebook' %}"
+                            data-v-e9b83e6c="">
+                            <div class="app-grid-icon__image" data-v-e9b83e6c=""><img style=""
+                                    srcset="https://img.icons8.com/?size=50&amp;id=118467&amp;format=png 1x, https://img.icons8.com/?size=100&amp;id=118467&amp;format=png 2x"
+                                    width="50" height="50" alt="Facebook icon"
+                                    data-v-e9b83e6c=""></div>
+                            <div class="app-grid-icon__title" data-test="grid-icon-title" data-v-e9b83e6c=""><span
+                                    class="app-grid-icon__title-wrap" data-v-e9b83e6c=""><span
+                                        class="app-grid-icon__text"
+                                        data-v-e8d7e064=""></span></span></div>
+                        </a>
+                    </div>
+                </div>
+
+
             </form>
             <div>
                 <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
@@ -30,7 +65,7 @@
         </div>
     </div>
 
-    
+
     <br><br>
 
 </section>

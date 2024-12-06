@@ -28,23 +28,19 @@ def cart_page(request, product_id):
 def show_cart(request):
     cart_items = Cart.objects.filter(user=request.user)
     most_viewed = cache.get('rotating_most_viewed')
-    
-    if not most_viewed:
-        all_most_viewed = list(ProductView.objects.order_by('-view_count')[:20])  
-        current_second = datetime.now().second  
-        start_index = (current_second * 4) % len(all_most_viewed)  
-        most_viewed = all_most_viewed[start_index:start_index + 4]
-        cache.set('rotating_most_viewed', most_viewed, 600)  
 
+    if not most_viewed:
+        all_most_viewed = list(ProductView.objects.order_by('-view_count')[:4])  
+        current_second = datetime.now().second  
+        start_index = (current_second * 4) % len(all_most_viewed)        
+        most_viewed = all_most_viewed[start_index:] + all_most_viewed[:start_index]  
+        cache.set('rotating_most_viewed', most_viewed, 100) 
     for item in cart_items:
         item.total_price = item.quantity * item.product.price
-
     cart_item_count = 0
     if request.user.is_authenticated:
-        cart_item_count = cart_items.count()
-
+        cart_item_count = cart_items.count() 
     grand_total = sum(item.total_price for item in cart_items)
-
     return render(request, 'cart/cart.html', {
         'cart_items': cart_items,
         'cart_item_count': cart_item_count,

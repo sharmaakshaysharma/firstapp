@@ -1,6 +1,22 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
+<div class="product-slider mt-3">
+    <div class="slick-carousel" style="margin: 0 -15px;">
+        {% for product in product %}
+        <div class="product-item" style="padding: 0 15px;">
+            <div class="card" style="min-height: 100px; box-shadow: none;">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img class="card-img-top" src="{{ product.image.url }}" alt="Image of {{ product.title }}"
+                        style="height: 200px; width: 400px;">                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br/>
+
 <div class="row gy-4">
     {% for prod in product %}
     <div class="col-sm-12 col-md-6 col-lg-3">
@@ -31,6 +47,7 @@
             </div>
         </div>
     </div>
+   
 
     <div class="modal fade" tabindex="-1" id="ViewProductModal" role="dialog" aria-labelledby="ViewProductModalLabel"
         aria-hidden="true">
@@ -64,6 +81,7 @@
 
     {% endfor %}
 </div>
+<br/>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -98,7 +116,6 @@
         });
     });
 
-
     function addToCart(productId) {
         fetch(`/cart/addtocart/${productId}/`, {
             method: 'POST',
@@ -114,5 +131,41 @@
             });
     }
 
+
 </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.slick-carousel').slick({
+            infinite: true,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
 {% endblock content %}

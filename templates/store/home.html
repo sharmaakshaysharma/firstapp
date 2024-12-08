@@ -1,6 +1,11 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    #messageIcon {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
 <div class="product-slider mt-3">
     <div class="slick-carousel" style="margin: 0 -15px;">
         {% for product in product %}
@@ -8,14 +13,14 @@
             <div class="card" style="min-height: 100px; box-shadow: none;">
                 <div class="d-flex justify-content-center align-items-center">
                     <img class="card-img-top" src="{{ product.image.url }}" alt="Image of {{ product.title }}"
-                        style="height: 300px; width: 300px;">                    
+                        style="height: 300px; width: 300px;">
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
-<br/>
+<br />
 
 <div class="row gy-4">
     {% for prod in product %}
@@ -47,7 +52,7 @@
             </div>
         </div>
     </div>
-   
+
 
     <div class="modal fade" tabindex="-1" id="ViewProductModal" role="dialog" aria-labelledby="ViewProductModalLabel"
         aria-hidden="true">
@@ -81,9 +86,72 @@
 
     {% endfor %}
 </div>
-<br/>
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <button class="btn btn-primary rounded-circle p-3" id="messageIcon" data-bs-toggle="modal"
+        data-bs-target="#messageModal">
+        <i class="fa-solid fa-message">Ask</i>
+    </button>
+</div>
+
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-black">
+                <h5 class="modal-title text-white" id="messageModalLabel">Ask Gemini</h5>
+                <button type="button" class="btn-close text-white bg-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="aiForm">
+                    <input type="hidden" id="model" name="model" class="form-control" value="gemini-1.5-flash" readonly>
+                    <div class="row">
+                        <div class="col-9">
+                            <input type="text" id="query" name="query" class="form-control"
+                                placeholder="Type your question..." required>
+                        </div>
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary w-100"><i
+                                    class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+                <hr>
+                <h5>Description:</h5>
+                <div id="responseContainer" class="p-3 border rounded bg-light" style="min-height: 100px;">
+                    <em>Description will appear here...</em>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<br />
 
 <script>
+    document.getElementById('aiForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const query = document.getElementById('query').value;
+        const model = document.getElementById('model').value;
+        const responseContainer = document.getElementById('responseContainer');
+        responseContainer.innerHTML = '<strong>Loading...</strong>';
+
+        try {
+            const response = await fetch(`/ai-response/?query=${encodeURIComponent(query)}&model=${model}`);
+            const data = await response.json();
+
+            if (data.error) {
+                responseContainer.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
+            } else {
+                responseContainer.innerHTML = `<p>${data.response}</p>`;
+            }
+        } catch (error) {
+            console.error(error);
+            responseContainer.innerHTML = '<span class="text-danger">An error occurred. Please try again.</span>';
+        }
+    });
     document.addEventListener("DOMContentLoaded", () => {
         const viewButtons = document.querySelectorAll(".view-btn");
         const modal = document.getElementById("ViewProductModal");

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',  
     'allauth.socialaccount.providers.facebook', 
 
+
 ]
 
 MIDDLEWARE = [
@@ -173,3 +174,5 @@ STRIPE_PUBLIC_KEY = 'pk_test_51QRp2hDuK2HxevWaAMZEY3bWbpG7tJ8X02fIxLheWPOq9J3MCj
 
 
 GOOGLE_BOOKS_API_KEY = 'AIzaSyB7Cj3gWle1m6QUdX8Y7q8_UG_i0-DlUM4'
+
+GENAI_API_KEY='AIzaSyDagK2TNdfo2CAokZYkaBZi2uaYrub266A'

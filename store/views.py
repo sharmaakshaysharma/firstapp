@@ -4,7 +4,10 @@ from django.contrib import messages
 from cart.models import Cart
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+import google.generativeai as genai
+from django.conf import settings
 
+genai.configure(api_key=settings.GENAI_API_KEY)
 
 @login_required
 def category_page(request):
@@ -128,3 +131,26 @@ def product_view(request, product_id):
     product_view.save()
     
     return JsonResponse({"message": "Product view count updated", "view_count": product_view.view_count})
+
+
+
+def get_dynamic_ai_response(request):
+    """
+    Django view to dynamically interact with the Google Gemini API.
+    """
+    try:
+        query = request.GET.get("query", None) 
+        model_name = request.GET.get("model", "gemini-1.5-flash")
+        if not query:
+            return JsonResponse({"error": "The 'query' parameter is required."}, status=400)
+        model = genai.GenerativeModel(model_name)
+        response = model.generate_content(
+            query,
+        )
+        return JsonResponse({
+            "query": query,
+            "model": model_name,
+            "response": response.text
+        })
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

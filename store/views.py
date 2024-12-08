@@ -135,9 +135,6 @@ def product_view(request, product_id):
 
 
 def get_dynamic_ai_response(request):
-    """
-    Django view to dynamically interact with the Google Gemini API.
-    """
     try:
         query = request.GET.get("query", None) 
         model_name = request.GET.get("model", "gemini-1.5-flash")

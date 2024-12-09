@@ -28,7 +28,6 @@ def cart_page(request, product_id):
 def show_cart(request):
     cart_items = Cart.objects.filter(user=request.user)
     most_viewed = cache.get('rotating_most_viewed')
-
     if not most_viewed:
         all_most_viewed = list(ProductView.objects.order_by('-view_count')[:4])   
     for item in cart_items:

@@ -30,11 +30,7 @@ def show_cart(request):
     most_viewed = cache.get('rotating_most_viewed')
 
     if not most_viewed:
-        all_most_viewed = list(ProductView.objects.order_by('-view_count')[:4])  
-        current_second = datetime.now().second  
-        start_index = (current_second * 4) % len(all_most_viewed)        
-        most_viewed = all_most_viewed[start_index:] + all_most_viewed[:start_index]  
-        cache.set('rotating_most_viewed', most_viewed, 100) 
+        all_most_viewed = list(ProductView.objects.order_by('-view_count')[:4])   
     for item in cart_items:
         item.total_price = item.quantity * item.product.price
     cart_item_count = 0
@@ -45,7 +41,7 @@ def show_cart(request):
         'cart_items': cart_items,
         'cart_item_count': cart_item_count,
         'grand_total': grand_total,
-        'most_viewed': most_viewed
+        'most_viewed': all_most_viewed
     })
 
 def update_cart(request):

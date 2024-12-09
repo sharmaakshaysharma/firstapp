@@ -16,4 +16,6 @@ urlpatterns = [
     path('product/delete',delete_product,name='delete_product'),
     path('productview/<int:product_id>/', product_view, name='product_view'),
     path('ai-response/', get_ai_response, name='ai_response'),
+    path('product/<int:product_id>', productbydetail, name='productbydetail'),
+    path('text-to-audio/', text_to_audio, name='text_to_audio'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

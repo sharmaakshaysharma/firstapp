@@ -1,7 +1,7 @@
 import requests
 from django.conf import settings
 
-def search_books(query, max_results=12):
+def search_books(query, max_results=40):
     """
     Search for books using the Google Books API.
     """

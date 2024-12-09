@@ -1,0 +1,28 @@
+{%extends 'base/base.html'  %}
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <h3 class="text-white">{{product.title}}</h3>
+        </div>
+        <div class="col text-end">
+            <a class="btn btn-dark text-white me-2" href="{% url 'home' %}"><i class="fa-solid fa-arrow-left-long me-1"></i>Back</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{product.image.url}}" alt="Product Image" class="img-fluid rounded">
+        </div>
+        <div class="col-md-8">
+            <p><strong>Author:</strong> <span>{{product.author}}</span></p>
+            <p><strong>Description:</strong></p>
+            <p>{{product.description}}</p>
+            <p><strong>Audio Description:</strong></p>
+            <audio controls>
+                <source src="{% url 'text_to_audio' %}?text={{ product.description|urlencode }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <br/>
+            <p><strong>Price:</strong> <span>{{product.price}}</span></p>
+        </div>
+    </div>
+{% endblock %}

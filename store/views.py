@@ -2,18 +2,20 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .forms import *
 from django.contrib import messages
 from cart.models import Cart
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.contrib.auth.decorators import login_required
 import google.generativeai as genai
 from django.conf import settings
+import os
+import hashlib
+from gtts import gTTS
 
-genai.configure(api_key=settings.GENAI_API_KEY)
+genai.configure(api_key=settings.GEMINI_API_KEY)
 
 @login_required
 def category_page(request):
     if request.method == 'POST':
-        form = CategoryType(request.POST)
-        
+        form = CategoryType(request.POST)        
         if form.is_valid():
             form.save()
             messages.success(request, 'Category added successfully')
@@ -132,8 +134,6 @@ def product_view(request, product_id):
     
     return JsonResponse({"message": "Product view count updated", "view_count": product_view.view_count})
 
-
-
 def get_ai_response(request):
     try:
         query = request.GET.get("query", None) 
@@ -151,3 +151,30 @@ def get_ai_response(request):
         })
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+
+def productbydetail(request,product_id):
+    try:
+        product=Product.objects.get(id=product_id)
+        return render(request,'store/productdetail.html',{'product':product})
+    except Product.DoesNotExist:
+        return render(request,'store/home.html')
+    
+def text_to_audio(request):
+    text = request.GET.get('text', '')
+    if not text.strip():
+        return HttpResponse("No text provided", status=400)   
+    filename_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+    audio_dir = os.path.join(settings.MEDIA_ROOT, 'audio_files')
+    os.makedirs(audio_dir, exist_ok=True)
+    audio_file = os.path.join(audio_dir, f"{filename_hash}.mp3")
+    try:       
+        if not os.path.exists(audio_file):
+            tts = gTTS(text, lang='en')
+            tts.save(audio_file)       
+        with open(audio_file, 'rb') as f:
+            response = HttpResponse(f.read(), content_type="audio/mpeg")
+            response['Content-Disposition'] = f'inline; filename="{filename_hash}.mp3"'
+        return response
+    except Exception as e:
+        return HttpResponse(f"Error: {e}", status=500)

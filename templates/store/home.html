@@ -2,10 +2,41 @@
 {% load static %}
 {% block content %}
 <style>
-    #messageIcon {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    #chatContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .chat-message {
+        display: flex;
+    }
+
+    .chat-message .user {
+        justify-content: flex-start;
+    }
+
+    .chat-message .response {
+        justify-content: flex-end;
+    }
+
+    .chat-message div {
+        max-width: 70%;
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .chat-message .user div {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .chat-message .response div {
+        background-color: #28a745;
+        color: white;
     }
 </style>
+
 <div class="product-slider mt-3">
     <div class="slick-carousel" style="margin: 0 -15px;">
         {% for product in product %}
@@ -102,6 +133,10 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div id="chatContainer" class="p-3 border rounded bg-light"
+                    style="min-height: 300px; overflow-y: auto;">
+                </div>
+                <hr/>
                 <form id="aiForm">
                     <input type="hidden" id="model" name="model" class="form-control" value="gemini-1.5-flash" readonly>
                     <div class="row">
@@ -114,14 +149,11 @@
                                     class="fa-solid fa-paper-plane"></i></button>
                         </div>
                     </div>
-
                 </form>
-                <hr>
-                <h5>Description:</h5>
-                <div id="responseContainer" class="p-3 border rounded bg-light" style="min-height: 100px;">
-                    <em>Description will appear here...</em>
-                </div>
+            
+
             </div>
+
         </div>
     </div>
 </div>
@@ -133,25 +165,59 @@
 <script>
     document.getElementById('aiForm').addEventListener('submit', async (event) => {
         event.preventDefault();
+
         const query = document.getElementById('query').value;
         const model = document.getElementById('model').value;
-        const responseContainer = document.getElementById('responseContainer');
-        responseContainer.innerHTML = '<strong>Loading...</strong>';
+        const chatContainer = document.getElementById('chatContainer');
+
+        const userMessage = document.createElement('div');
+        userMessage.className = 'd-flex justify-content-start mb-2';
+        userMessage.innerHTML = `
+        <div class="p-2 bg-primary text-white rounded" style="max-width: 70%;">
+            ${query}
+        </div>
+    `;
+        chatContainer.appendChild(userMessage);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        document.getElementById('query').value = '';
+
+        const loadingMessage = document.createElement('div');
+        loadingMessage.className = 'd-flex justify-content-end mb-2';
+        loadingMessage.innerHTML = `
+        <div class="p-2 bg-light text-muted rounded" style="max-width: 70%;">
+            <strong>Loading...</strong>
+        </div>
+    `;
+        chatContainer.appendChild(loadingMessage);
 
         try {
             const response = await fetch(`/ai-response/?query=${encodeURIComponent(query)}&model=${model}`);
             const data = await response.json();
-
-            if (data.error) {
-                responseContainer.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
-            } else {
-                responseContainer.innerHTML = `<p>${data.response}</p>`;
-            }
+            chatContainer.removeChild(loadingMessage);
+            const responseMessage = document.createElement('div');
+            responseMessage.className = 'd-flex justify-content-end mb-2';
+            responseMessage.innerHTML = `
+            <div class="p-2 bg-success text-white rounded" style="max-width: 70%;">
+                ${data.error ? `<span class="text-danger">Error: ${data.error}</span>` : data.response}
+            </div>
+        `;
+            chatContainer.appendChild(responseMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         } catch (error) {
             console.error(error);
-            responseContainer.innerHTML = '<span class="text-danger">An error occurred. Please try again.</span>';
+            chatContainer.removeChild(loadingMessage);
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'd-flex justify-content-end mb-2';
+            errorMessage.innerHTML = `
+            <div class="p-2 bg-danger text-white rounded" style="max-width: 70%;">
+                An error occurred. Please try again.
+            </div>
+        `;
+            chatContainer.appendChild(errorMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     });
+
     document.addEventListener("DOMContentLoaded", () => {
         const viewButtons = document.querySelectorAll(".view-btn");
         const modal = document.getElementById("ViewProductModal");
@@ -198,10 +264,6 @@
                 document.getElementById(`cart-button-${productId}`).href = data.cart_url;
             });
     }
-
-
-</script>
-<script type="text/javascript">
     $(document).ready(function () {
         $('.slick-carousel').slick({
             infinite: true,
@@ -234,6 +296,8 @@
             ]
         });
     });
+
+
 </script>
 
 {% endblock content %}

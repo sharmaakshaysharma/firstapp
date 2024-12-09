@@ -15,5 +15,5 @@ urlpatterns = [
     path('product/update',update_product,name='update_product'),
     path('product/delete',delete_product,name='delete_product'),
     path('productview/<int:product_id>/', product_view, name='product_view'),
-    path('ai-response/', get_dynamic_ai_response, name='dynamic_ai_response'),
+    path('ai-response/', get_ai_response, name='ai_response'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

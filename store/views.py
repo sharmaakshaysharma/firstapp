@@ -134,7 +134,7 @@ def product_view(request, product_id):
 
 
 
-def get_dynamic_ai_response(request):
+def get_ai_response(request):
     try:
         query = request.GET.get("query", None) 
         model_name = request.GET.get("model", "gemini-1.5-flash")

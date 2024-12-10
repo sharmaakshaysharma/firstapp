@@ -35,10 +35,17 @@
     footer {
       margin-top: auto; 
     }
+    
   </style>
 </head>
 
 <body>
+  <aside class="mt-4 d-flex justify-content-between align-items-center" style="margin-bottom: -5.4rem; margin-top: 11px;">
+    <div style="display: flex; align-items: center;">
+      <h1 style="display: inline-block; font-family: 'Pacifico', cursive; font-size: 2.5rem; color: #fff; margin-right: 10px;">ShelfSavvy</h1>
+      <i class="fas fa-book-open" style="font-size: 2.5rem; color: #fff;"></i>
+    </div>
+</aside>
   <div class="container mt-4">
     <nav class="navbar navbar-expand-lg navbar-light bg-black">
       <div class="container-fluid">
@@ -96,12 +103,14 @@
         </ul>
       </div>
     </nav>
+    
 
     {% include 'alert/alert.html' %}
     <div class="container mt-4">
       {% block content %} {% endblock %}
     </div>
   </div>
+
   
   <footer class="bg-dark text-white py-4">
     <div class="container">
@@ -133,7 +142,7 @@
       </div>
     </div>
     <div class="text-center mt-3">
-      <p>&copy; 2024 My Website. All Rights Reserved.</p>
+      <p>&copy; 2024 ShelfSavvy. All Rights Reserved.</p>
     </div>
   </footer>
 </body>

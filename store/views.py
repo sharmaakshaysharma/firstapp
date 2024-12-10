@@ -134,24 +134,47 @@ def product_view(request, product_id):
     
     return JsonResponse({"message": "Product view count updated", "view_count": product_view.view_count})
 
+# def get_ai_response(request):
+#     try:
+#         query = request.GET.get("query", None) 
+#         model_name = request.GET.get("model", "gemini-1.5-flash")
+#         if not query:
+#             return JsonResponse({"error": "The 'query' parameter is required."}, status=400)
+#         model = genai.GenerativeModel(model_name)
+#         response = model.generate_content(
+#             query,
+#         )
+#         return JsonResponse({
+#             "query": query,
+#             "model": model_name,
+#             "response": response.text
+#         })
+#     except Exception as e:
+#         return JsonResponse({"error": str(e)}, status=500)
+
+
 def get_ai_response(request):
     try:
-        query = request.GET.get("query", None) 
+        query = request.GET.get("query", None)
         model_name = request.GET.get("model", "gemini-1.5-flash")
+        temperature = float(request.GET.get("temperature", 0.7))
+
         if not query:
             return JsonResponse({"error": "The 'query' parameter is required."}, status=400)
+        conversation_history = request.session.get("conversation_history", "")
+        full_input = f"{conversation_history}\nUser: {query}"
         model = genai.GenerativeModel(model_name)
-        response = model.generate_content(
-            query,
-        )
+        response = model.generate_content(full_input)
+        updated_history = f"{full_input}\nAI: {response.text}"
+        request.session["conversation_history"] = updated_history
         return JsonResponse({
             "query": query,
             "model": model_name,
+            "temperature":temperature,
             "response": response.text
         })
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
 
 def productbydetail(request,product_id):
     try:

@@ -156,7 +156,7 @@
         chatContainer.appendChild(loadingMessage);
 
         try {
-            const response = await fetch(`/ai-response/?query=${encodeURIComponent(query)}&model=${model}`);
+            const response = await fetch(`/ai-response/?query=${encodeURIComponent(query)}&model=${model}&temperature=2`);
             const data = await response.json();
             chatContainer.removeChild(loadingMessage);
             const responseMessage = document.createElement('div');
